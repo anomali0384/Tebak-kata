@@ -1,0 +1,1 @@
+const kbbiWords = [\n    'aja',\n    'kita',\n    'kata',\n    'cinta',\n    'bahasa',\n    'unik',\n    'komputer',\n    'televisi',\n    'sekolah',\n    'penghargaan',\n    'permainan',\n    'indonesia',\n    'kebudayaan'\n];
