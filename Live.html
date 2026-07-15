@@ -6,64 +6,40 @@
     <title>Kata Klasik (Live View)</title>
     <style>
         body { background-color: #121212; color: white; font-family: sans-serif; margin: 0; height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
-
-        /* Menyembunyikan semua elemen navigasi dan keyboard */
         #header, .keyboard, .modal-overlay, #main-menu { display: none !important; }
-
         #board-area { flex: 1; display: flex; justify-content: center; align-items: center; }
-        
         #controls-area { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; padding-bottom: 20px; width: 100%; }
         #status-msg { font-size: 18px; height: 30px; text-align: center; margin-bottom: 10px; font-weight: bold; color: #fff; }
         
-        #btn-new-game { background: #333; color: white; border: none; padding: 8px 16px; font-weight: bold; cursor: pointer; border-radius: 4px; }
-        .hidden-btn { display: none !important; }
-        
         .grid { display: grid; grid-template-rows: repeat(8, 50px); gap: 8px; }
-        .row { display: grid; grid-template-columns: repeat(5, 50px); gap: 8px; transition: transform 0.1s; }
+        .row { display: grid; grid-template-columns: repeat(5, 50px); gap: 8px; }
         .box { width: 50px; height: 50px; border: 2px solid #333; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 28px; text-transform: uppercase; background: #1e1e1e; }
-        .hidden { display: none; }
         
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20% { transform: translateX(-5px); }
-            40% { transform: translateX(5px); }
-            60% { transform: translateX(-5px); }
-            80% { transform: translateX(5px); }
-        }
-        .shake { animation: shake 0.4s; }
+        /* Warna hasil tebakan */
+        .box.correct { background-color: #6aaa64; border-color: #6aaa64; }
+        .box.present { background-color: #c9b458; border-color: #c9b458; }
+        .box.absent { background-color: #787c7e; border-color: #787c7e; }
     </style>
 </head>
 <body>
 
-<div id="game-katla" class="screen" style="display: flex; flex-direction: column; height: 100vh;">
+<div id="game-katla" style="display: flex; flex-direction: column; height: 100vh;">
     <div id="board-area"><div class="grid" id="board"></div></div>
     <div id="controls-area">
-        <div id="status-msg"></div>
-        <button id="btn-new-game" class="hidden-btn" onclick="resetGame()">Mulai Baru</button>
+        <div id="status-msg">Live Status: Menunggu data...</div>
     </div>
 </div>
 
 <script>
-    const dictionary = ["ABADI", "ACARA", "AKTIF", "AKSES", "AMBIL", "ANTAR", "BADAI", "BADAN", "BAHAN", "BATIK", "BEBAS", "BEKAL", "BENAR", "BENDA", "BENIH", "BERAT", "BESAR", "BESOK", "BETON", "BIASA", "BIBIR", "BIDAN", "BIKIN", "BILIK", "BIOLA", "BISIK", "BOBOT", "BOLEH", "BOSAN", "BUAYA", "BUKIT", "BUKTI", "BULAN", "BUNGA", "BUNYI", "BURUH", "BURUK", "BUSUR", "BUTIR", "CABAI", "CABUT", "CACAT", "CAKAP", "CALON", "CAMAT", "CAPAI", "CATAT", "CAWAN", "CEKIK", "CELAH", "CEMAS", "CERAH", "CERIA", "CETAK", "CIPTA", "CITRA", "CUACA", "CUKUP", "CURAH", "DALAM", "DAMAI", "DAMAR", "DANAU", "DAPAT", "DARAH", "DARAT", "DEBAT", "DEBIT", "DEKAT", "DEKAP", "DEMAM", "DENDA", "DERAS", "DERET", "DETAK", "DETIK", "DEWAN", "DIKSI", "DINAS", "DUDUK", "DUNIA", "DUSUN", "EGOIS", "ELEGI", "GIGIT", "GURUH", "HAFAL", "HARGA", "HARUM", "HASIL", "HEMAT", "HIBUR", "HIDUP", "HIJAU", "HITAM", "HUKUM", "HUTAN", "IKLAN", "INDAH", "INPUT", "INTAN", "IRAMA", "ISENG", "ISLAH", "JAGAT", "JALAN", "JAMBU", "JAMIN", "JANJI", "JARAK", "JARUM", "JATUH", "JAWAB", "JELAS", "JELMA", "JERIH", "JINAK", "JOGET", "JUDUL", "JUJUR", "JULUK", "JUMPA", "KABAR", "KABUT", "KADAR", "KAKAK", "KALAU", "KALBU", "KAMAR", "KAMUS", "KAPAN", "KANTA", "KAPAL", "KARAM", "KASUR", "KAWAN", "KAYAK", "KEDAI", "KELAS", "KELIR", "KENAL", "KERAS", "KERJA", "KESAN", "KETAT", "KIMIA", "KIRIM", "KISAH", "KITAB", "KORAN", "KOTAK", "KRIDA", "KRIYA", "KUASA", "KULIT", "KUMAN", "KUNCI", "KURAS", "KURSI", "LAHIR", "LAMPU", "LAPAR", "LARAS", "LATAR", "LAWAN", "LAYAR", "LEBAT", "LELAH", "LEMAK", "LETAK", "LEVEL", "LIHAT", "LIRIK", "LOKAL", "LOMBA", "LUKIS", "LUNAK", "LURUS", "MABUK", "MADYA", "MAKAN", "MAMPU", "MANDI", "MANIS", "MARAH", "MASAK", "MASUK", "MAWAR", "MENIT", "MERAH", "MESTI", "MESIN", "MINAT", "MINUM", "MIRIP", "MODAL", "MODEL", "MOMEN", "MORAL", "MOTIF", "MOTOR", "MUDIK", "MULAI", "MULIA", "MULUT", "MURAH", "MURID", "MUSIM", "NAFAS", "NAKAS", "NAMUN", "NASIB", "NATAL", "NEKAT", "NETRA", "NILAI", "NOMOR", "NYALA", "NYATA", "OMPOL", "OPINI", "ORANG", "PACAR", "PADAM", "PADAT", "PAGAR", "PAHAM", "PAJAK", "PAKAI", "PAKET", "PALSU", "PANAS", "PANEL", "PAPAN", "PARAF", "PARIT", "PARUH", "PASAR", "PASIF", "PASIR", "PATEN", "PATUH", "PECAH", "PEDAL", "PEDAS", "PEGAS", "PELAN", "PENUH", "PERAH", "PERAS", "PERLU", "PESAN", "PETAK", "PIALA", "PIANO", "PIKAT", "PIKIR", "PILAH", "PILOT", "PINTU", "PISAU", "POHON", "POLIO", "POLIS", "PORSI", "PRIMA", "PROMO", "PROSA", "PUISI", "PULAU", "PULSA", "PUNCA", "PURBA", "PUSAT", "PUTIH", "PUTRA", "QURAN", "RABUN", "RACIK", "RADAR", "RADIO", "RAKIT", "RAMAI", "RAMBU", "RANAH", "RANCU", "RAPAT", "RASIO", "RATAP", "REBAH", "REBUS", "REMAH", "RENDA", "REUNI", "RICUH", "RINDU", "RISAU", "RITME", "RIVAL", "ROKET", "RUKUN", "RUMAH", "RUMUS", "RUSAK", "SABAR", "SABUN", "SADAR", "SAKIT", "SALAH", "SALJU", "SALON", "SALUR", "SAMAR", "SANTA", "SARAN", "SARAT", "SASAR", "SAWAH", "SEBAB", "SEGAR", "SEKAT", "SELAM", "SELAT", "SEMUA", "SENAM", "SENDA", "SENJA", "SERAK", "SERAM", "SERAT", "SERBU", "SERTA", "SESAK", "SETIA", "SETOR", "SIANG", "SIAPA", "SIFAT", "SIKAP", "SIKAT", "SIKSA", "SILAT", "SIMAK", "SINAR", "SINGA", "SIPIL", "SIRAM", "SISIR", "SITUS", "SKALA", "SKEMA", "SOBAT", "SOLAR", "SOLID", "SONAR", "SOPAN", "SORAK", "SOSOK", "SPASI", "START", "STUDI", "STRES", "SUARA", "SUDAH", "SUJUD", "SULIT", "SULUH", "SUMBU", "SURAT", "SURYA", "SUSUN", "SUTRA", "TABAH", "TABEL", "TABIK", "TABIR", "TAHAN", "TAHAP", "TAHUN", "TAJAM", "TAKAR", "TAKUT", "TALAK", "TAMAN", "TANAH", "TANAK", "TANAM", "TANDA", "TANPA", "TAPAK", "TARIF", "TARIK", "TATAP", "TAWAR", "TEBAK", "TEBAS", "TEGAK", "TEGAS", "TEGUK", "TEKAD", "TEKAN", "TEKUN", "TELAN", "TELAT", "TELUR", "TEMAN", "TEMPA", "TENAR", "TENDA", "TENIS", "TENUN", "TEPAT", "TEPUK", "TERAS", "TERUS", "TEWAS", "TIANG", "TIDAK", "TIDUR", "TIKAM", "TIKET", "TIMAH", "TIMBA", "TIMUR", "TINTA", "TIRAI", "TITIK", "TOKOH", "TOLAK", "TOLEH", "TOMAT", "TORSI", "TOTAL", "TREND", "TULIS", "TUNAI", "TUNAS", "TUNDA", "TURUN", "TUTUP", "UDARA", "UJIAN", "ULAMA", "UNDUR", "UNSUR", "UNTUK", "UPAYA", "USAHA", "UTAMA", "UTANG", "UTARA", "VALID", "VARIA", "VENUS", "VIDEO", "VILLA", "VIRUS", "VISUM", "VITAL", "VOKAL", "VONIS", "WADAH", "WAJAH", "WAJAR", "WAKAF", "WAKIL", "WAKTU", "WALET", "WARAS", "WARGA", "WARNA", "WARTA", "WASIT", "WATAK", "WIDYA", "WINDU", "WISMA", "WUDHU"];
-
-    let secretWord, attempts, currentRow, currentInput, gameOver;
     const board = document.getElementById('board');
     const statusMsg = document.getElementById('status-msg');
-    const btnNewGame = document.getElementById('btn-new-game');
 
-    function initGame() {
-        secretWord = dictionary[Math.floor(Math.random() * dictionary.length)];
-        attempts = 8;
-        currentRow = 0;
-        currentInput = "";
-        gameOver = false;
-        statusMsg.innerText = "";
+    // 1. Buat Grid Kosong
+    function createBoard() {
         board.innerHTML = "";
-        btnNewGame.classList.add('hidden-btn'); 
         for (let i = 0; i < 8; i++) {
             const row = document.createElement('div');
-            row.className = 'row ' + (i === 0 ? '' : 'hidden');
-            row.id = 'row-' + i;
+            row.className = 'row';
             for (let j = 0; j < 5; j++) {
                 const box = document.createElement('div');
                 box.className = 'box';
@@ -73,10 +49,45 @@
         }
     }
 
-    function resetGame() { initGame(); }
-    
-    // Inisialisasi game saat halaman dimuat
-    initGame();
+    // 2. Ambil data dari server (GANTI URL DI BAWAH INI)
+    // Jika Vercel tidak bisa akses localhost, gunakan URL Ngrok/Public server kamu
+    async function fetchData() {
+        try {
+            // GANTI 'http://localhost:5000' dengan alamat IP atau Ngrok server kamu jika perlu
+            const response = await fetch('https://hash-interventions-row-sauce.trycloudflare.com'); 
+            const data = await response.json(); 
+            
+            // Asumsi data: { "grid": ["ABADI", "KABAR"], "results": [[2,2,2,2,2], [0,1,0,0,0]] }
+            // 2 = Hijau, 1 = Kuning, 0 = Abu-abu
+            updateBoard(data);
+            statusMsg.innerText = "Live Terhubung";
+        } catch (e) {
+            statusMsg.innerText = "Server Terputus...";
+        }
+    }
+
+    // 3. Update tampilan
+    function updateBoard(data) {
+        const rows = document.querySelectorAll('.row');
+        if (!data.grid) return;
+
+        data.grid.forEach((word, rowIndex) => {
+            const boxes = rows[rowIndex].querySelectorAll('.box');
+            for(let i=0; i<5; i++) {
+                boxes[i].innerText = word[i] || "";
+                // Warna berdasarkan hasil
+                if(data.results && data.results[rowIndex]) {
+                    const status = data.results[rowIndex][i];
+                    if(status === 2) boxes[i].classList.add('correct');
+                    else if(status === 1) boxes[i].classList.add('present');
+                    else if(status === 0 && word[i]) boxes[i].classList.add('absent');
+                }
+            }
+        });
+    }
+
+    createBoard();
+    setInterval(fetchData, 1000); // Cek setiap 1 detik
 </script>
 </body>
 </html>
