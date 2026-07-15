@@ -5,35 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kata Klasik</title>
     <style>
-        body { background-color: #121212; color: white; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; height: 100dvh; }
-        h3 { margin: 20px 0; font-size: 24px; letter-spacing: 2px; }
+        body { background-color: #121212; color: white; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
+        h3 { margin: 10px 0 20px 0; font-size: 24px; letter-spacing: 2px; color: #fff; }
         
-        #board { display: grid; grid-template-rows: repeat(8, 45px); gap: 8px; margin-bottom: 20px; }
-        .row { display: grid; grid-template-columns: repeat(5, 45px); gap: 8px; }
+        #board { display: flex; flex-direction: column; gap: 8px; }
+        .row { display: flex; gap: 8px; }
         .box { width: 45px; height: 45px; border: 2px solid #333; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 24px; text-transform: uppercase; }
         
-        #status-msg { height: 30px; margin-bottom: 15px; font-size: 16px; }
-        
-        .keyboard { display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 400px; padding: 0 10px; }
-        .key-row { display: flex; justify-content: center; gap: 4px; }
-        button.key { padding: 12px 5px; background: #333; color: white; border: none; border-radius: 4px; flex: 1; font-weight: bold; font-size: 14px; }
-        button.wide { flex: 1.5; }
+        #status-msg { height: 30px; margin-bottom: 15px; font-size: 14px; color: #888; }
     </style>
 </head>
 <body>
 
     <h3>KATA KLASIK</h3>
-    <div id="status-msg">Memuat...</div>
+    <div id="status-msg">Memuat kata...</div>
     <div id="board"></div>
-    <div class="keyboard" id="keyboard"></div>
 
 <script>
-    // --- KONFIGURASI API ---
-    // GANTI [URL_CLOUDFLARE_KAMU] dengan link dari Termux kamu
+    // --- KONFIGURASI ---
+    // GANTI [URL_CLOUDFLARE_KAMU] dengan link tunnel kamu
     const API_BASE_URL = "https://[URL_CLOUDFLARE_KAMU].trycloudflare.com"; 
 
     let secretWord = "DUNIA"; // Default
-    let currentRow = 0, currentInput = "", gameOver = false;
+    let currentRow = 0;
+    let currentInput = "";
+    let gameOver = false;
     const board = document.getElementById('board');
     const statusMsg = document.getElementById('status-msg');
 
@@ -44,65 +40,80 @@
             secretWord = data.word.toUpperCase();
             statusMsg.innerText = "";
         } catch (error) {
-            statusMsg.innerText = "Server Terputus";
+            statusMsg.innerText = "Gagal terhubung ke server.";
         }
     }
 
-    function initBoard() {
-        for (let i = 0; i < 8; i++) {
-            const row = document.createElement('div');
-            row.className = 'row';
-            row.id = 'row-' + i;
-            for (let j = 0; j < 5; j++) {
-                const box = document.createElement('div');
-                box.className = 'box';
-                row.appendChild(box);
-            }
-            board.appendChild(row);
+    function createRow() {
+        const row = document.createElement('div');
+        row.className = 'row';
+        row.id = 'row-' + currentRow;
+        for (let j = 0; j < 5; j++) {
+            const box = document.createElement('div');
+            box.className = 'box';
+            row.appendChild(box);
         }
+        board.appendChild(row);
     }
 
-    // --- LOGIKA INPUT KEYBOARD ---
-    function handleInput(key) {
+    // Input dari keyboard HP
+    document.addEventListener('keydown', (e) => {
         if (gameOver) return;
-        if (key === "ENTER") {
+
+        if (e.key === "Enter") {
             if (currentInput.length === 5) checkWord();
-        } else if (key === "DEL") {
+        } else if (e.key === "Backspace") {
             currentInput = currentInput.slice(0, -1);
             updateBoard();
-        } else if (currentInput.length < 5) {
-            currentInput += key;
+        } else if (currentInput.length < 5 && /^[a-zA-Z]$/.test(e.key)) {
+            currentInput += e.key.toUpperCase();
             updateBoard();
         }
-    }
+    });
 
     function updateBoard() {
         const boxes = document.getElementById('row-' + currentRow).querySelectorAll('.box');
-        for (let i = 0; i < 5; i++) boxes[i].innerText = currentInput[i] || "";
+        for (let i = 0; i < 5; i++) {
+            boxes[i].innerText = currentInput[i] || "";
+        }
     }
 
     function checkWord() {
-        // Logika checkWord tetap sama (warna, dll)...
-        // (Bisa ditambahkan fungsi warnanya di sini)
+        const rowEl = document.getElementById('row-' + currentRow);
+        const boxes = rowEl.querySelectorAll('.box');
+        let tempSecret = secretWord.split('');
+
+        // Cek warna
+        for(let i=0; i<5; i++) {
+            if(currentInput[i] === secretWord[i]) {
+                boxes[i].style.backgroundColor = "#4CAF50"; // Hijau
+                tempSecret[i] = null;
+            }
+        }
+        for(let i=0; i<5; i++) {
+            if(boxes[i].style.backgroundColor !== "rgb(76, 175, 80)") {
+                if(tempSecret.includes(currentInput[i])) {
+                    boxes[i].style.backgroundColor = "#FF9800"; // Oranye
+                    tempSecret[tempSecret.indexOf(currentInput[i])] = null;
+                } else {
+                    boxes[i].style.backgroundColor = "#333"; // Abu
+                }
+            }
+        }
+
+        if (currentInput === secretWord) {
+            statusMsg.innerText = "SELAMAT! ANDA BERHASIL.";
+            statusMsg.style.color = "#4CAF50";
+            gameOver = true;
+        } else {
+            currentRow++;
+            currentInput = "";
+            createRow();
+        }
     }
 
-    // --- SETUP AWAL ---
-    initBoard();
     fetchSecretWord();
-
-    const keys = [["Q","W","E","R","T","Y","U","I","O","P"], ["A","S","D","F","G","H","J","K","L"], ["ENTER","Z","X","C","V","B","N","M","DEL"]];
-    keys.forEach(rowArr => {
-        const rowDiv = document.createElement('div');
-        rowDiv.className = 'key-row';
-        rowArr.forEach(k => {
-            const btn = document.createElement('button');
-            btn.innerText = k;
-            btn.className = "key" + (k === "ENTER" || k === "DEL" ? " wide" : "");
-            btn.onclick = () => handleInput(k);
-            rowDiv.appendChild(btn);
-        });
-        document.getElementById('keyboard').appendChild(rowDiv);
-    });
+    createRow();
 </script>
 </body>
 </html>
