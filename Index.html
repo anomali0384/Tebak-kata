@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kata Klasik Live</title>
+    <style>
+        body { 
+            background-color: #121212; 
+            color: white; 
+            font-family: sans-serif; 
+            margin: 0; 
+            height: 100dvh; 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+        }
+
+        #game-katla { 
+            width: 100%; 
+            height: 100dvh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            box-sizing: border-box; 
+        }
+        
+        #header-center { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            margin-bottom: 25px; 
+        }
+        
+        #header-center h3 { 
+            text-align: center; 
+            margin: 0; 
+            font-size: 28px; 
+            font-weight: bold; 
+            letter-spacing: 2px; 
+            color: #fff;
+        }
+
+        #board-area { 
+            flex: 0 0 auto; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            margin-bottom: 20px; 
+        }
+        
+        .grid { 
+            display: grid; 
+            grid-template-rows: repeat(8, 44px); 
+            gap: 12px; 
+        }
+        .row { 
+            display: grid; 
+            grid-template-columns: repeat(5, 44px); 
+            gap: 4px; 
+            transition: transform 0.1s; 
+        }
+        .box { 
+            width: 44px; 
+            height: 44px; 
+            border: 2px solid #333; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-family: 'Arial Black', sans-serif; 
+            font-weight: 900; 
+            font-size: 22px; 
+            text-transform: uppercase; 
+            border-radius: 4px; 
+            box-sizing: border-box; 
+        }
+        .row.hidden-row { 
+            visibility: hidden; 
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-5px); }
+            40% { transform: translateX(5px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+        .shake { animation: shake 0.4s; }
+
+        #status-msg { 
+            font-size: 16px; 
+            height: 30px; 
+            text-align: center; 
+            margin-top: 15px; 
+            font-weight: bold; 
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-katla">
+    <div id="header-center">
+        <h3>KATA KLASIK</h3>
+    </div>
+    
+    <div id="board-area">
+        <div class="grid" id="board"></div>
+    </div>
+    
+    <div id="status-msg"></div>
+</div>
+
+<script>
+    const dictionary = ["ABADI", "ACARA", "AKTIF", "AKSES", "AMBIL", "ANTAR", "BADAI", "BADAN", "BAHAN", "BATIK", "BEBAS", "BEKAL", "BENAR", "BENDA", "BENIH", "BERAT", "BESAR", "BESOK", "BETON", "BIASA", "BIBIR", "BIDAN", "BIKIN", "BILIK", "BIOLA", "BISIK", "BOBOT", "BOLEH", "BOSAN", "BUAYA", "BUKIT", "BUKTI", "BULAN", "BUNGA", "BUNYI", "BURUH", "BURUK", "BUSUR", "BUTIR", "CABAI", "CABUT", "CACAT", "CAKAP", "CALON", "CAMAT", "CAPAI", "CATAT", "CAWAN", "CEKIK", "CELAH", "CEMAS", "CERAH", "CERIA", "CETAK", "CIPTA", "CITRA", "CUACA", "CUKUP", "CURAH", "DALAM", "DAMAI", "DAMAR", "DANAU", "DAPAT", "DARAH", "DARAT", "DEBAT", "DEBIT", "DEKAT", "DEKAP", "DEMAM", "DENDA", "DERAS", "DERET", "DETAK", "DETIK", "DEWAN", "DIKSI", "DINAS", "DUDUK", "DUNIA", "DUSUN", "EGOIS", "ELEGI", "GIGIT", "GURUH", "HAFAL", "HARGA", "HARUM", "HASIL", "HEMAT", "HIBUR", "HIDUP", "HIJAU", "HITAM", "HUKUM", "HUTAN", "IKLAN", "INDAH", "INPUT", "INTAN", "IRAMA", "ISENG", "ISLAH", "JAGAT", "JALAN", "JAMBU", "JAMIN", "JANJI", "JARAK", "JARUM", "JATUH", "JAWAB", "JELAS", "JELMA", "JERIH", "JINAK", "JOGET", "JUDUL", "JUJUR", "JULUK", "JUMPA", "KABAR", "KABUT", "KADAR", "KAKAK", "KALAU", "KALBU", "KAMAR", "KAMUS", "KAPAN", "KANTA", "KAPAL", "KARAM", "KASUR", "KAWAN", "KAYAK", "KEDAI", "KELAS", "KELIR", "KENAL", "KERAS", "KERJA", "KESAN", "KETAT", "KIMIA", "KIRIM", "KISAH", "KITAB", "KORAN", "KOTAK", "KRIDA", "KRIYA", "KUASA", "KULIT", "KUMAN", "KUNCI", "KURAS", "KURSI", "LAHIR", "LAMPU", "LAPAR", "LARAS", "LATAR", "LAWAN", "LAYAR", "LEBAT", "LELAH", "LEMAK", "LETAK", "LEVEL", "LIHAT", "LIRIK", "LOKAL", "LOMBA", "LUKIS", "LUNAK", "LURUS", "MABUK", "MADYA", "MAKAN", "MAMPU", "MANDI", "MANIS", "MARAH", "MASAK", "MASUK", "MAWAR", "MENIT", "MERAH", "MESTI", "MESIN", "MINAT", "MINUM", "MIRIP", "MODAL", "MODEL", "MOMEN", "MORAL", "MOTIF", "MOTOR", "MUDIK", "MULAI", "MULIA", "MULUT", "MURAH", "MURID", "MUSIM", "NAFAS", "NAKAS", "NAMUN", "NASIB", "NATAL", "NEKAT", "NETRA", "NILAI", "NOMOR", "NYALA", "NYATA", "OMPOL", "OPINI", "ORANG", "PACAR", "PADAM", "PADAT", "PAGAR", "PAHAM", "PAJAK", "PAKAI", "PAKET", "PALSU", "PANAS", "PANEL", "PAPAN", "PARAF", "PARIT", "PARUH", "PASAR", "PASIF", "PASIR", "PATEN", "PATUH", "PECAH", "PEDAL", "PEDAS", "PEGAS", "PELAN", "PENUH", "PENUH", "PERAH", "PERAS", "PERLU", "PESAN", "PETAK", "PIALA", "PIANO", "PIKAT", "PIKIR", "PILAH", "PILOT", "PINTU", "PISAU", "POHON", "POLIO", "POLIS", "PORSI", "PRIMA", "PROMO", "PROSA", "PUISI", "PULAU", "PULSA", "PUNCA", "PURBA", "PUSAT", "PUTIH", "PUTRA", "QURAN", "RABUN", "RACIK", "RADAR", "RADIO", "RAKIT", "RAMAI", "RAMBU", "RANAH", "RANCU", "RAPAT", "RASIO", "RATAP", "REBAH", "REBUS", "REMAH", "RENDA", "REUNI", "RICUH", "RINDU", "RISAU", "RITME", "RIVAL", "ROKET", "RUKUN", "RUMAH", "RUMUS", "RUSAK", "SABAR", "SABUN", "SADAR", "SAKIT", "SALAH", "SALJU", "SALON", "SALUR", "SAMAR", "SANTA", "SARAN", "SARAT", "SASAR", "SAWAH", "SEBAB", "SEGAR", "SEKAT", "SELAM", "SELAT", "SEMUA", "SENAM", "SENDA", "SENJA", "SERAK", "SERAM", "SERAT", "SERBU", "SERTA", "SESAK", "SETIA", "SETOR", "SIANG", "SIAPA", "SIFAT", "SIKAP", "SIKAT", "SIKSA", "SILAT", "SIMAK", "SINAR", "SINGA", "SIPIL", "SIRAM", "SISIR", "SITUS", "SKALA", "SKEMA", "SOBAT", "SOLAR", "SOLID", "SONAR", "SOPAN", "SORAK", "SOSOK", "SPASI", "START", "STUDI", "STRES", "SUARA", "SUDAH", "SUJUD", "SULIT", "SULUH", "SUMBU", "SURAT", "SURYA", "SUSUN", "SUTRA", "TABAH", "TABEL", "TABIK", "TABIR", "TAHAN", "TAHAP", "TAHUN", "TAJAM", "TAKAR", "TAKUT", "TALAK", "TAMAN", "TANAH", "TANAK", "TANAM", "TANDA", "TANPA", "TAPAK", "TARIF", "TARIK", "TATAP", "TAWAR", "TEBAK", "TEBAS", "TEGAK", "TEGAS", "TEGUK", "TEKAD", "TEKAN", "TEKUN", "TELAN", "TELAT", "TELUR", "TEMAN", "TEMPA", "TENAR", "TENDA", "TENIS", "TENUN", "TEPAT", "TEPUK", "TERAS", "TERUS", "TEWAS", "TIANG", "TIDAK", "TIDUR", "TIKAM", "TIKET", "TIMAH", "TIMBA", "TIMUR", "TINTA", "TIRAI", "TITIK", "TOKOH", "TOLAK", "TOLEH", "TOMAT", "TORSI", "TOTAL", "TREND", "TULIS", "TUNAI", "TUNAS", "TUNDA", "TURUN", "TUTUP", "UDARA", "UJIAN", "ULAMA", "UNDUR", "UNSUR", "UNTUK", "UPAYA", "USAHA", "UTAMA", "UTANG", "UTARA", "VALID", "VARIA", "VENUS", "VIDEO", "VILLA", "VIRUS", "VISUM", "VITAL", "VOKAL", "VONIS", "WADAH", "WAJAH", "WAJAR", "WAKAF", "WAKIL", "WAKTU", "WALET", "WARAS", "WARGA", "WARNA", "WARTA", "WASIT", "WATAK", "WIDYA", "WINDU", "WISMA", "WUDHU", "MALAM", "MALAS", "LAPAR", "ECENG", "FOBIA", "KIMIA", "ONCOM", "BALUT", "BELUT", "BELOK", "BELOT", "GADIS", "KAPAN", "PAPAN", "DAMAR", "KOBOI", "OMBAK", "TOBAT", "LOBAK", "DOMBA", "JANUR", "JALUR", "SARAF", "CAWAT", "SAJAK", "BALAI", "KAWAT", "WALAU", "DEPAN", "LEGAL", "TETAP", "KALAH", "KIPAS", "JAJAH", "LEBAM", "INTRO", "SEDAP", "DEDAK", "DERAI", "SADIS", "SAKSI", "SIBUK", "SIPUT", "SINUS", "SIRUP", "SIKUT", "SENTI", "SENSI", "FINIS", "ISTRI", "ISING", "ISLAM", "SEHAT", "SEJAK", "SESAT", "SYAIR", "SALTO", "SALDO", "PALEM", "KALEM", "BIHUN", "IBLIS", "IKLIM", "KLIEN", "ALIEN", "AGAMA", "ALARM", "ANEKA", "ARENA", "ALBUM", "ALIAS", "ALTER", "GLOBE", "HIMNE", "THETA", "INTIM", "INTER", "MITOS", "PEYOT", "BETOT", "YATIM", "ELING", "PLUTO", "ARTIS", "ARSIP", "ARGON", "TIRTA", "MITRA", "PUTRI", "ROMAN", "EYANG", "ENTAH", "EMISI", "EDISI", "SUNYI", "SEPUH", "SEKOP", "ULUNG", "URUNG", "ELANG", "OLENG", "OPONG", "OYONG", "OBENG", "KORAL", "BOCAH", "BACOK", "BACOT", "CIDUK", "CICIL", "LIRIS", "KIKIL", "LICIK", "BINTI", "BIBIT", "DIDIH", "DIGIT", "HILIR", "NIHIL", "SIDIK", "SISIP", "CICIP", "LILIN", "INANG", "JIJIK", "PIPIS", "TIPIS", "KIKIR", "GIGIH", "INGIN", "AMINO", "PIPIT", "LIMIT", "MIMIK", "MANIS", "ZIKIR", "LIPIT", "MUSIK", "IBRIT", "KOPLO", "MIMPI", "FISIK", "FIKSI", "INJIL", "WINDI", "WIDIH", "BIJIH", "INTIP", "FIKIR", "JILID", "VIVID", "TIRIS", "RISIH", "RISIK", "CIBIR", "SIHIR", "SIPIR", "CICIT", "PIPIH", "PILIH", "JOULE", "GIMIK", "PELIK", "DELIK", "BELIT", "MILIK", "SILIH", "LEMAH", "LULUS", "LOLOS", "LEMBU", "LECET", "LUCUT", "PARAS", "SAYAP", "LALAT", "RANAI", "NANAS", "NANAR", "RAWAT", "PAPAR", "DADAR", "CACAR", "RALAT", "RAMAH", "RAWAN", "MAHAR", "SABTU", "BABAK", "GAGAH", "PANCA", "SANCA", "KAMIS", "PANIR", "BAKSO", "PAKIS", "SAKTI", "PANIK", "PAKSA", "JAKSA", "DAKSA", "JAKET", "PUASA", "NYERI", "NGERI", "CANDA", "CAGAR", "CERNA", "NYAWA", "KARIM", "LAZIM", "KOREK", "KEROK", "TEROR", "KEONG", "NYALI", "NGILU", "BABON", "BALIK", "YAKIN", "YAKNI", "INTEL", "KAFIR", "KARIR", "KARIP", "LABIL", "LABEL", "FABEL", "MAYOR", "BUYAR", "BAYAR", "BAZAR", "KEBAB", "IMPOR", "MIKRO", "MAKRO", "MAKRO", "SELIR", "SEMIR", "SEMUR", "BOROS", "PASAK", "GARUT", "VIRGO", "KARGO", "TULIP", "TULUS", "DONOR", "HOROR", "RUMOR", "TUMOR", "GEGER", "JEJER", "TELER", "BEBEK", "BECEK", "LEHER", "LELEH", "LELET", "RECEH", "PECEK", "PESEK", "NENEK", "JEWER", "BIJAK", "GESEK", "RESEH", "SEREH", "KEKER", "TEHEL", "ELENG", "PEPES", "MEREM", "MEREK", "SEMEN", "MESES", "BACEM", "SERET", "BERES", "BEREL", "CEPER", "BEBER", "MEWEK", "EMBER", "TETES", "PELEH", "GEMEN", "KOTOR", "BESEK", "WESEL", "TEMPE", "CECEH", "KEKEH", "PECEL", "BACEM", "CINTA", "MINTA", "MANTU", "PINTA", "BANDO", "POMPA"];
+
+    let secretWord, attempts, currentRow, currentInput, gameOver;
+    const board = document.getElementById('board');
+    const statusMsg = document.getElementById('status-msg');
+
+    function initGame() {
+        secretWord = dictionary[Math.floor(Math.random() * dictionary.length)];
+        attempts = 8; 
+        currentRow = 0; 
+        currentInput = ""; 
+        gameOver = false;
+        statusMsg.innerText = ""; 
+        statusMsg.style.color = "white";
+        board.innerHTML = "";
+        
+        for (let i = 0; i < 8; i++) {
+            const row = document.createElement('div');
+            row.className = 'row' + (i === 0 ? '' : ' hidden-row');
+            row.id = 'row-' + i;
+            for (let j = 0; j < 5; j++) {
+                const box = document.createElement('div');
+                box.className = 'box';
+                row.appendChild(box);
+            }
+            board.appendChild(row);
+        }
+    }
+
+    function handleInput(key) {
+        if (gameOver) return;
+        key = key.toUpperCase();
+        
+        if (key.length === 1 && key >= 'A' && key <= 'Z') {
+            if (currentInput.length < 5) {
+                currentInput += key;
+                statusMsg.innerText = "";
+                updateBoard();
+                if (currentInput.length === 5) {
+                    setTimeout(checkWord, 300);
+                }
+            }
+        }
+    }
+
+    function updateBoard() {
+        const boxes = document.getElementById('row-' + currentRow).querySelectorAll('.box');
+        for (let i = 0; i < 5; i++) {
+            boxes[i].innerText = currentInput[i] || "";
+        }
+    }
+
+    function checkWord() {
+        if (currentInput.length < 5) return;
+        
+        if (!dictionary.includes(currentInput)) {
+            statusMsg.innerText = "Tidak ada di kamus!";
+            statusMsg.style.color = "orange";
+            const rowEl = document.getElementById('row-' + currentRow);
+            rowEl.classList.add('shake');
+            setTimeout(() => rowEl.classList.remove('shake'), 400);
+            currentInput = "";
+            updateBoard();
+            return;
+        }
+        
+        statusMsg.style.color = "white";
+        attempts--;
+        
+        const rowEl = document.getElementById('row-' + currentRow);
+        const boxes = rowEl.querySelectorAll('.box');
+        let tempSecret = secretWord.split('');
+        
+        for(let i=0; i<5; i++) {
+            if(currentInput[i] === secretWord[i]) {
+                boxes[i].style.backgroundColor = "#538d4e";
+                boxes[i].style.borderColor = "#538d4e";
+                tempSecret[i] = null;
+            }
+        }
+        for(let i=0; i<5; i++) {
+            if(boxes[i].style.backgroundColor !== "rgb(83, 141, 78)") {
+                if(tempSecret.includes(currentInput[i])) {
+                    boxes[i].style.backgroundColor = "#b59f3b";
+                    boxes[i].style.borderColor = "#b59f3b";
+                    boxes[i].style.color = "black";
+                    tempSecret[tempSecret.indexOf(currentInput[i])] = null;
+                } else {
+                    boxes[i].style.backgroundColor = "#333";
+                    boxes[i].style.borderColor = "#333";
+                }
+            }
+        }
+
+        if (currentInput === secretWord) {
+            statusMsg.innerText = "MENANG!";
+            statusMsg.style.color = "#4CAF50";
+            gameOver = true;
+            setTimeout(initGame, 3000); // Otomatis mulai game baru setelah 3 detik
+        } else if (attempts === 0) {
+            statusMsg.innerHTML = `GAME OVER - Kata: <span style="color:white">${secretWord}</span>`;
+            statusMsg.style.color = "#ff4444";
+            gameOver = true;
+            setTimeout(initGame, 4000); // Otomatis mulai game baru setelah 4 detik
+        } else {
+            currentRow++;
+            const nextRow = document.getElementById('row-' + currentRow);
+            if(nextRow) nextRow.classList.remove('hidden-row');
+            currentInput = "";
+        }
+    }
+
+    // Jalankan game saat pertama kali dibuka
+    initGame();
+</script>
+
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+  const SUPABASE_URL = 'https://ylishoshellvusyspwvm.supabase.co'
+  const SUPABASE_KEY = 'sb_publishable__hoFs0eTljpjgNaiLSN6ZQ_U8_XH9Vb'
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+  // Kotak informasi penonton mengambang di atas layar
+  let infoBox = document.createElement('div');
+  infoBox.style.position = 'fixed';
+  infoBox.style.top = '15px';
+  infoBox.style.left = '50%';
+  infoBox.style.transform = 'translateX(-50%)';
+  infoBox.style.background = 'rgba(0, 0, 0, 0.9)';
+  infoBox.style.color = '#00ffcc';
+  infoBox.style.padding = '8px 18px';
+  infoBox.style.borderRadius = '8px';
+  infoBox.style.zIndex = '9999';
+  infoBox.style.fontSize = '14px';
+  infoBox.style.fontWeight = 'bold';
+  infoBox.style.textAlign = 'center';
+  infoBox.style.boxShadow = '0 4px 12px rgba(0,0,0,0.6)';
+  infoBox.innerText = 'Menunggu penonton berkomentar...';
+  document.body.appendChild(infoBox);
+
+  supabase
+    .channel('custom-insert-channel')
+    .on(
+      'postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'Masukan_permainan' },
+      (payload) => {
+        const username = payload.new.username;
+        const tebakan = payload.new.tebakan.trim();
+        
+        console.log(`[LIVE] ${username} menebak: ${tebakan}`);
+        
+        // Tampilkan nama dan tebakan penonton di layar
+        infoBox.innerText = `💬 @${username} menebak: ${tebakan}`;
+        
+        // Kirim huruf tebakan ke fungsi game
+        if (tebakan.length === 1 && typeof handleInput === 'function') {
+            handleInput(tebakan.toUpperCase());
+        }
+      }
+    )
+    .subscribe();
+</script>
+</body>
+</html>
