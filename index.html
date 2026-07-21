@@ -331,15 +331,30 @@
         document.getElementById('keyboard').appendChild(rowDiv);
     });
 </script>
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-// Konfigurasi Supabase kamu
-const SUPABASE_URL = 'https://ylishoshellvusyspwvm.supabase.co'
-const SUPABASE_KEY = 'sb_publishable__hoFs0eTljpjgNaiLSN6ZQ_U8_XH9Vb'
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+  const SUPABASE_URL = 'https://ylishoshellvusyspwvm.supabase.co'
+  const SUPABASE_KEY = 'sb_publishable__hoFs0eTljpjgNaiLSN6ZQ_U8_XH9Vb'
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 
-// Fungsi untuk mendengarkan komentar baru secara real-time
-function mulaiDengarKomentar() {
+  // Buat kotak informasi mengambang di layar secara otomatis untuk menampilkan penonton
+  let infoBox = document.createElement('div');
+  infoBox.style.position = 'fixed';
+  infoBox.style.top = '70px';
+  infoBox.style.left = '50%';
+  infoBox.style.transform = 'translateX(-50%)';
+  infoBox.style.background = 'rgba(0, 0, 0, 0.85)';
+  infoBox.style.color = '#00ffcc';
+  infoBox.style.padding = '8px 16px';
+  infoBox.style.borderRadius = '8px';
+  infoBox.style.zIndex = '9999';
+  infoBox.style.fontSize = '14px';
+  infoBox.style.fontWeight = 'bold';
+  infoBox.style.textAlign = 'center';
+  infoBox.innerText = 'Menunggu penonton berkomentar...';
+  document.body.appendChild(infoBox);
+
   supabase
     .channel('custom-insert-channel')
     .on(
@@ -347,31 +362,21 @@ function mulaiDengarKomentar() {
       { event: 'INSERT', schema: 'public', table: 'Masukan_permainan' },
       (payload) => {
         const username = payload.new.username;
-        const tebakan = payload.new.tebakan;
+        const tebakan = payload.new.tebakan.trim();
         
-        console.log(`[LIVE] ${username}: ${tebakan}`);
+        console.log(`[LIVE] ${username} menebak: ${tebakan}`);
         
-        // --- MASUKKAN KONTROL GAME KAMU DI SINI ---
-        panggilAksiGame(tebakan, username);
+        // Tampilkan nama dan tebakan penonton di layar
+        infoBox.innerText = `💬 @${username} menebak: ${tebakan}`;
+        
+        // Kirim huruf tebakan ke fungsi game (pastikan fungsi game Anda bernama handleInput)
+        if (tebakan.length === 1) {
+            handleInput(tebakan.toUpperCase());
+        }
       }
     )
     .subscribe();
-}
-
-function panggilAksiGame(tebakan, username) {
-  const aksi = tebakan.toLowerCase().trim();
-  
-  if (aksi === 'kanan') {
-    // Logika game menggerakkan karakter ke kanan
-    console.log(`${username} menggerakkan karakter ke KANAN`);
-  } else if (aksi === 'kiri') {
-    // Logika game menggerakkan karakter ke kiri
-    console.log(`${username} menggerakkan karakter ke KIRI`);
-  }
-}
-
-// Jalankan fungsi pendengar saat game dimuat
-mulaiDengarKomentar();
+</script>
     
 </script>
 </body>
