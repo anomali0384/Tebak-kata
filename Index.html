@@ -23,11 +23,11 @@
         
         #header h3 { text-align: center; margin: 0; font-size: 75%; font-weight: 500; letter-spacing: 1px; }
 
-        #board-area { flex: 0 0 auto; height: 480px; display: flex; justify-content: center; align-items: center; }
+        #board-area { flex: 0 0 auto; height: 480px; display: flex; justify-content: center; align-items: flex-start; overflow-y: auto; width: 100%; scroll-behavior: smooth; }
         #controls-area { flex: 1; display: flex; flex-direction: column; align-items: center; padding-bottom: 10px; width: 100%; }
         #status-msg { font-size: 14px; height: 25px; text-align: center; margin-bottom: 15px; }
         
-        .grid { display: grid; grid-template-rows: repeat(8, 44px); gap: 12px; }
+        .grid { display: flex; flex-direction: column; gap: 12px; padding: 10px 0; }
         .row { display: grid; grid-template-columns: repeat(5, 44px); gap: 4px; transition: transform 0.1s; }
         .box { 
             width: 44px; height: 44px; border: 2px solid #333; 
@@ -142,6 +142,7 @@
     const modal = document.getElementById('modal-overlay');
     const keyboard = document.getElementById('keyboard');
     const streakDisplay = document.getElementById('streak-display');
+    const boardArea = document.getElementById('board-area');
 
     function updateStreakDisplay() {
         if (streakDisplay) streakDisplay.innerText = "❤‍🔥" + streak;
@@ -176,16 +177,28 @@
         
         updateStreakDisplay();
         
-        for (let i = 0; i < 8; i++) {
-            const row = document.createElement('div');
-            row.className = 'row' + (i === 0 ? '' : ' hidden-row');
-            row.id = 'row-' + i;
-            for (let j = 0; j < 5; j++) {
-                const box = document.createElement('div');
-                box.className = 'box';
-                row.appendChild(box);
-            }
-            board.appendChild(row);
+        // Buat 5 baris awal, baris pertama terbuka, sisanya hidden
+        for (let i = 0; i < 5; i++) {
+            addRowToBoard(i, i !== 0);
+        }
+    }
+
+    function addRowToBoard(rowIndex, hidden = false) {
+        const row = document.createElement('div');
+        row.className = 'row' + (hidden ? ' hidden-row' : '');
+        row.id = 'row-' + rowIndex;
+        for (let j = 0; j < 5; j++) {
+            const box = document.createElement('div');
+            box.className = 'box';
+            row.appendChild(box);
+        }
+        board.appendChild(row);
+    }
+
+    function scrollToRow(rowIndex) {
+        const rowEl = document.getElementById('row-' + rowIndex);
+        if (rowEl) {
+            boardArea.scrollTop = rowEl.offsetTop - 20;
         }
     }
 
@@ -228,6 +241,48 @@
         for (let i = 0; i < 5; i++) boxes[i].innerText = currentInput[i] || "";
     }
 
+    function showWinner(username, profileImg) {
+        gameOver = true;
+        streak++; 
+        updateStreakDisplay();
+
+        let winnerOverlay = document.getElementById('winner-overlay');
+        if (!winnerOverlay) {
+            winnerOverlay = document.createElement('div');
+            winnerOverlay.id = 'winner-overlay';
+            winnerOverlay.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:1000; display:flex; justify-content:center; align-items:center; flex-direction:column;';
+            document.body.appendChild(winnerOverlay);
+        }
+
+        winnerOverlay.innerHTML = `
+            <div style="background:#1e1e1e; border:2px solid #4CAF50; padding:30px; border-radius:16px; text-align:center; max-width:320px; width:90%; box-shadow: 0 8px 24px rgba(0,0,0,0.5);">
+                ${profileImg ? `<img src="${profileImg}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:3px solid #4CAF50; margin-bottom:15px;">` : `<div style="width:80px; height:80px; border-radius:50%; background:#333; display:flex; align-items:center; justify-content:center; font-size:32px; margin:0 auto 15px auto;">👤</div>`}
+                <h2 style="color:#4CAF50; margin:0 0 10px 0; font-size:20px;">PENEBAK BENAR!</h2>
+                <p style="font-size:18px; font-weight:bold; margin:0 0 10px 0; color:white;">@${username}</p>
+                <p style="font-size:14px; color:#aaa; margin:0 0 0 0;">Kata: <strong style="color:#00ffcc">${secretWord}</strong></p>
+            </div>
+        `;
+        winnerOverlay.style.display = 'flex';
+
+        setTimeout(() => {
+            winnerOverlay.style.display = 'none';
+            initGame();
+        }, 3500);
+    }
+
+    function checkWordForViewer(username, profileImg) {
+        const rowEl = document.getElementById('row-' + currentRow);
+        const boxes = rowEl.querySelectorAll('.box');
+        
+        for(let i=0; i<5; i++) {
+            boxes[i].style.backgroundColor = "#538d4e";
+            boxes[i].style.borderColor = "#538d4e";
+            boxes[i].innerText = currentInput[i];
+        }
+
+        showWinner(username, profileImg);
+    }
+
     function checkWord() {
         if (!dictionary.includes(currentInput)) {
             statusMsg.innerText = "Tidak ada di kamus!";
@@ -267,36 +322,16 @@
         }
 
         if (currentInput === secretWord) {
-            statusMsg.innerText = "MENANG! Berganti kata baru...";
-            statusMsg.style.color = "#4CAF50";
-            streak++; 
-            updateStreakDisplay();
-            gameOver = true;
-            setTimeout(() => {
-                initGame();
-            }, 3000); // Otomatis reset kata baru setelah 3 detik
+            showWinner("Kamu", null);
         } else {
             currentRow++;
-            const nextRow = document.getElementById('row-' + currentRow);
-            if(nextRow) {
+            let nextRow = document.getElementById('row-' + currentRow);
+            if (nextRow) {
                 nextRow.classList.remove('hidden-row');
             } else {
-                // Jika sudah habis 8 baris tapi belum benar, reset papan ke atas tapi tetap kata yang sama
-                currentRow = 0;
-                for (let i = 0; i < 8; i++) {
-                    const r = document.getElementById('row-' + i);
-                    r.className = 'row' + (i === 0 ? '' : ' hidden-row');
-                    const boxesArr = r.querySelectorAll('.box');
-                    boxesArr.forEach(b => {
-                        b.innerText = "";
-                        b.style.backgroundColor = "";
-                        b.style.borderColor = "#333";
-                        b.style.color = "white";
-                    });
-                }
-                statusMsg.innerText = "Belum tepat, lanjut menebak!";
-                statusMsg.style.color = "#00ffcc";
+                addRowToBoard(currentRow, false); // Tambah baris baru tanpa batas
             }
+            scrollToRow(currentRow);
             currentInput = "";
         }
     }
@@ -356,15 +391,25 @@
       'postgres_changes',
       { event: 'INSERT', schema: 'public', table: 'Masukan_permainan' },
       (payload) => {
-        const username = payload.new.username;
-        const tebakan = payload.new.tebakan.trim();
+        const username = payload.new.username || 'Penonton';
+        const tebakan = payload.new.tebakan ? payload.new.tebakan.trim().toUpperCase() : '';
+        const profileImg = payload.new.profile || payload.new.avatar || payload.new.avatar_url || payload.new.foto || null;
         
         console.log(`[LIVE] ${username} menebak: ${tebakan}`);
-        
         infoBox.innerText = `💬 @${username} menebak: ${tebakan}`;
         
-        if (tebakan.length === 1) {
-            handleInput(tebakan.toUpperCase());
+        if (gameOver) return;
+
+        if (tebakan === secretWord) {
+            currentInput = tebakan;
+            updateBoard();
+            checkWordForViewer(username, profileImg);
+        } else if (tebakan.length === 1) {
+            handleInput(tebakan);
+        } else if (tebakan.length === 5 && dictionary.includes(tebakan)) {
+            currentInput = tebakan;
+            updateBoard();
+            checkWord();
         }
       }
     )
