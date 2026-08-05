@@ -17,7 +17,7 @@
     <link rel="icon" type="image/png" href="https://i.ibb.co.com/4RjtcjvD/1000034154.png">
     <link rel="apple-touch-icon" href="https://i.ibb.co.com/4RjtcjvD/1000034154.png">
 
-    <!-- WEB APP MANIFEST INLINE (Agar ikon di layar utama HP terbaca optimal) -->
+    <!-- WEB APP MANIFEST INLINE -->
     <link rel="manifest" href="data:application/manifest+json;charset=utf-8,{
         %22name%22: %22Tebak Kata%22,
         %22short_name%22: %22Tebak Kata%22,
@@ -35,14 +35,14 @@
         ]
     }">
 
-    <!-- 2. META TAGS: Untuk logo saat link dibagikan atau dicari di web -->
+    <!-- 2. META TAGS -->
     <meta property="og:title" content="Tebak Kata - Kata Klasik">
     <meta property="og:description" content="Mainkan game tebak kata seru dan asah otakmu di sini!">
     <meta property="og:image" content="https://i.ibb.co.com/4RjtcjvD/1000034154.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://i.ibb.co.com/4RjtcjvD/1000034154.png">
 
-    <!-- SCHEMA.ORG UNTUK GOOGLE SEARCH -->
+    <!-- SCHEMA.ORG -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -61,7 +61,6 @@
 
         .screen { width: 100%; height: 100dvh; display: none; flex-direction: column; align-items: center; box-sizing: border-box; }
         
-        /* CSS Layar Loading dengan Efek Fade-Out */
         #loading-screen { 
             position: fixed;
             top: 0;
@@ -91,8 +90,8 @@
 
         #main-menu { font-size: 70%; display: flex; background-color: #555555; justify-content: flex-start; padding-top: 40px; }
         
-        /* CSS untuk Logo di Menu Utama */
-        .logo-img { width: 90px; height: auto; margin-bottom: 15px; border-radius: 18px; }
+        /* LOGO DI MENU UTAMA DIKEMBALIKAN KE UKURAN NORMAL (70px) */
+        .logo-img { width: 70px; height: auto; margin-bottom: 15px; border-radius: 15px; }
 
         .menu-btn { padding: 15px 30px; margin: 10px; font-size: 18px; cursor: pointer; background: #333; color: white; border: none; border-radius: 8px; width: 250px; }
         .menu-btn:hover { background: #444; }
@@ -400,7 +399,6 @@
             streak = 0; 
             updateStreakDisplay();
             gameOver = true;
-            btnNewManager = true;
             btnNewGame.classList.remove('hidden-btn');
             btnSurrender.style.visibility = 'hidden';
             keyboard.style.display = 'none';
