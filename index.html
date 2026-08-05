@@ -244,8 +244,8 @@
             }, 800);
         }, 1500);
 
-        // Muat data tersimpan saat pertama kali dibuka
-        loadGameState();
+        // Muat streak tersimpan saat halaman pertama kali dibuka
+        loadStreak();
 
         // Inisialisasi state awal browser history untuk tombol kembali HP
         history.replaceState({ screen: 'menu' }, '');
@@ -269,16 +269,10 @@
         }
     });
 
-    const dictionary = ["ABADI", "ACARA", "AKTIF", "AKSES", "AMBIL", "ANTAR", "BADAI", "BADAN", "BAHAN", "BATIK", "BEBAS", "BEKAL", "BENAR", "BENDA", "BENIH", "BERAT", "BESAR", "BESOK"];
+    const dictionary = ["ABADI", "ACARA", "AKTIF", "AKSES", "AMBIL", "ANTAR", "BADAI", "BADAN", "BAHAN", "BATIK", "BEBAS", "BEKAL", "BENAR", "BENDA", "BENIH", "BERAT", "BESAR", "BESOK", "BETON", "BIASA", "BIBIR", "BIDAN", "BIKIN", "BILIK", "BIOLA", "BISIK", "BOBOT", "BOLEH", "BOSAN", "BUAYA", "BUKIT", "BUKTI", "BULAN", "BUNGA", "BUNYI", "BURUH", "BURUK", "BUSUR", "BUTIR", "CABAI", "CABUT", "CACAT", "CAKAP", "CALON", "CAMAT", "CAPAI", "CATAT", "CAWAN", "CEKIK", "CELAH", "CEMAS", "CERAH", "CERIA", "CETAK", "CIPTA", "CITRA", "CUACA", "CUKUP", "CURAH", "DALAM", "DAMAI", "DAMAR", "DANAU", "DAPAT", "DARAH", "DARAT", "DEBAT", "DEBIT", "DEKAT", "DEKAP", "DEMAM", "DENDA", "DERAS", "DERET", "DETAK", "DETIK", "DEWAN", "DIKSI", "DINAS", "DUDUK", "DUNIA", "DUSUN", "EGOIS", "ELEGI", "GIGIT", "GURUH", "HAFAL", "HARGA", "HARUM", "HASIL", "HEMAT", "HIBUR", "HIDUP", "HIJAU", "HITAM", "HUKUM", "HUTAN", "IKLAN", "INDAH", "INPUT", "INTAN", "IRAMA", "ISENG", "ISLAH", "JAGAT", "JALAN", "JAMBU", "JAMIN", "JANJI", "JARAK", "JARUM", "JATUH", "JAWAB", "JELAS", "JELMA", "JERIH", "JINAK", "JOGET", "JUDUL", "JUJUR", "JULUK", "JUMPA", "KABAR", "KABUT", "KADAR", "KAKAK", "KALAU", "KALBU", "KAMAR", "KAMUS", "KAPAN", "KANTA", "KAPAL", "KARAM", "KASUR", "KAWAN", "KAYAK", "KEDAI", "KELAS", "KELIR", "KENAL", "KERAS", "KERJA", "KESAN", "KETAT", "KIMIA", "KIRIM", "KISAH", "KITAB", "KORAN", "KOTAK", "KRIDA", "KRIYA", "KUASA", "KULIT", "KUMAN", "KUNCI", "KURAS", "KURSI", "LAHIR", "LAMPU", "LAPAR", "LARAS", "LATAR", "LAWAN", "LAYAR", "LEBAT", "LELAH", "LEMAK", "LETAK", "LEVEL", "LIHAT", "LIRIK", "LOKAL", "LOMBA", "LUKIS", "LUNAK", "LURUS", "MABUK", "MADYA", "MAKAN", "MAMPU", "MANDI", "MANIS", "MARAH", "MASAK", "MASUK", "MAWAR", "MENIT", "MERAH", "MESTI", "MESIN", "MINAT", "MINUM", "MIRIP", "MODAL", "MODEL", "MOMEN", "MORAL", "MOTIF", "MOTOR", "MUDIK", "MULAI", "MULIA", "MULUT", "MURAH", "MURID", "MUSIM", "NAFAS", "NAKAS", "NAMUN", "NASIB", "NATAL", "NEKAT", "NETRA", "NILAI", "NOMOR", "NYALA", "NYATA", "OMPOL", "OPINI", "ORANG", "PACAR", "PADAM", "PADAT", "PAGAR", "PAHAM", "PAJAK", "PAKAI", "PAKET", "PALSU", "PANAS", "PANEL", "PAPAN", "PARAF", "PARIT", "PARUH", "PASAR", "PASIF", "PASIR", "PATEN", "PATUH", "PECAH", "PEDAL", "PEDAS", "PEGAS", "PELAN", "PENUH", "PENUH", "PERAH", "PERAS", "PERLU", "PESAN", "PETAK", "PIALA", "PIANO", "PIKAT", "PIKIR", "PILAH", "PILOT", "PINTU", "PISAU", "POHON", "POLIO", "POLIS", "PORSI", "PRIMA", "PROMO", "PROSA", "PUISI", "PULAU", "PULSA", "PUNCA", "PURBA", "PUSAT", "PUTIH", "PUTRA", "QURAN", "RABUN", "RACIK", "RADAR", "RADIO", "RAKIT", "RAMAI", "RAMBU", "RANAH", "RANCU", "RAPAT", "RASIO", "RATAP", "REBAH", "REBUS", "REMAH", "RENDA", "REUNI", "RICUH", "RINDU", "RISAU", "RITME", "RIVAL", "ROKET", "RUKUN", "RUMAH", "RUMUS", "RUSAK", "SABAR", "SABUN", "SADAR", "SAKIT", "SALAH", "SALJU", "SALON", "SALUR", "SAMAR", "SANTA", "SARAN", "SARAT", "SASAR", "SAWAH", "SEBAB", "SEGAR", "SEKAT", "SELAM", "SELAT", "SEMUA", "SENAM", "SENDA", "SENJA", "SERAK", "SERAM", "SERAT", "SERBU", "SERTA", "SESAK", "SETIA", "SETOR", "SIANG", "SIAPA", "SIFAT", "SIKAP", "SIKAT", "SIKSA", "SILAT", "SIMAK", "SINAR", "SINGA", "SIPIL", "SIRAM", "SISIR", "SITUS", "SKALA", "SKEMA", "SOBAT", "SOLAR", "SOLID", "SONAR", "SOPAN", "SORAK", "SOSOK", "SPASI", "START", "STUDI", "STRES", "SUARA", "SUDAH", "SUJUD", "SULIT", "SULUH", "SUMBU", "SURAT", "SURYA", "SUSUN", "SUTRA", "TABAH", "TABEL", "TABIK", "TABIR", "TAHAN", "TAHAP", "TAHUN", "TAJAM", "TAKAR", "TAKUT", "TALAK", "TAMAN", "TANAH", "TANAK", "TANAM", "TANDA", "TANPA", "TAPAK", "TARIF", "TARIK", "TATAP", "TAWAR", "TEBAK", "TEBAS", "TEGAK", "TEGAS", "TEGUK", "TEKAD", "TEKAN", "TEKUN", "TELAN", "TELAT", "TELUR", "TEMAN", "TEMPA", "TENAR", "TENDA", "TENIS", "TENUN", "TEPAT", "TEPUK", "TERAS", "TERUS", "TEWAS", "TIANG", "TIDAK", "TIDUR", "TIKAM", "TIKET", "TIMAH", "TIMBA", "TIMUR", "TINTA", "TIRAI", "TITIK", "TOKOH", "TOLAK", "TOLEH", "TOMAT", "TORSI", "TOTAL", "TREND", "TULIS", "TUNAI", "TUNAS", "TUNDA", "TURUN", "TUTUP", "UDARA", "UJIAN", "ULAMA", "UNDUR", "UNSUR", "UNTUK", "UPAYA", "USAHA", "UTAMA", "UTANG", "UTARA", "VALID", "VARIA", "VENUS", "VIDEO", "VILLA", "VIRUS", "VISUM", "VITAL", "VOKAL", "VONIS", "WADAH", "WAJAH", "WAJAR", "WAKAF", "WAKIL", "WAKTU", "WALET", "WARAS", "WARGA", "WARNA", "WARTA", "WASIT", "WATAK", "WIDYA", "WINDU", "WISMA", "WUDHU", "MALAM", "MALAS", "LAPAR", "ECENG", "FOBIA", "KIMIA", "ONCOM", "BALAS", "BELUT", "BELOK", "BELOT", "GADIS", "KAPAN", "PAPAN", "DAMAR", "KOBOI", "OMBAK", "TOBAT", "LOBAK", "DOMBA", "JANUR", "JALUR", "SARAF", "CAWAT", "SAJAK", "BALAI", "KAWAT", "WALAU", "DEPAN", "LEGAL", "TETAP", "KALAH", "KIPAS", "JAJAH", "LEBAM", "INTRO", "SEDAP", "DEDAK", "DERAI", "SADIS", "SAKSI", "SIBUK", "SIPUT", "SINUS", "SIRUP", "SIKUT", "SENTI", "SENSI", "FINIS", "ISTRI", "ISING", "ISLAM", "SEHAT", "SEJAK", "SESAT", "SYAIR", "SALTO", "SALDO", "PALEM", "KALEM", "BIHUN", "IBLIS", "IKLIM", "KLIEN", "ALIEN", "AGAMA", "ALARM", "ANEKA", "ARENA", "ALBUM", "ALIAS", "ALTER", "GLOBE", "HIMNE", "THETA", "INTIM", "INTER", "MITOS", "PEYOT", "BETOT", "YATIM", "ELING", "PLUTO", "ARTIS", "ARSIP", "ARGON", "TIRTA", "MITRA", "PUTRI", "ROMAN", "EYANG", "ENTAH", "EMISI", "EDISI", "SUNYI", "SEPUH", "SEKOP", "ULUNG", "URUNG", "ELANG", "OLENG", "OPONG", "OYONG", "OBENG", "KORAL", "BOCAH", "BACOK", "BACOT", "CIDUK", "CICIL", "LIRIS", "KIKIL", "LICIK", "BINTI", "BIBIT", "DIDIH", "DIGIT", "HILIR", "NIHIL", "SIDIK", "SISIP", "CICIP", "LILIN", "INANG", "JIJIK", "PIPIS", "TIPIS", "KIKIR", "GIGIH", "INGIN", "AMINO", "PIPIT", "LIMIT", "MIMIK", "MANIS", "ZIKIR", "LIPIT", "MUSIK", "IBRIT", "KOPLO", "MIMPI", "FISIK", "FIKSI", "INJIL", "WINDI", "WIDIH", "BIJIH", "INTIP", "FIKIR", "JILID", "VIVID", "TIRIS", "RISIH", "RISIK", "CIBIR", "SIHIR", "SIPIR", "CICIT", "PIPIH", "PILIH", "JOULE", "GIMIK", "PELIK", "DELIK", "BELIT", "MILIK", "SILIH", "LEMAH", "LULUS", "LOLOS", "LEMBU", "LECET", "LUCUT", "PARAS", "SAYAP", "LALAT", "RANAI", "NANAS", "NANAR", "RAWAT", "PAPAR", "DADAR", "CACAR", "RALAT", "RAMAH", "RAWAN", "MAHAR", "SABTU", "BABAK", "GAGAH", "PANCA", "SANCA", "KAMIS", "PANIR", "BAKSO", "PAKIS", "SAKTI", "PANIK", "PAKSA", "JAKSA", "DAKSA", "JAKET", "PUASA", "NYERI", "NGERI", "CANDA", "CAGAR", "CERNA", "NYAWA", "KARIM", "LAZIM", "KOREK", "KEROK", "TEROR", "KEONG", "NYALI", "NGILU", "BABON", "BALIK", "YAKIN", "YAKNI", "INTEL", "KAFIR", "KARIR", "KARIP", "LABIL", "LABEL", "FABEL", "MAYOR", "BUYAR", "BAYAR", "BAZAR", "KEBAB", "IMPOR", "MIKRO", "MAKRO", "MAKRO", "SELIR", "SEMIR", "SEMUR", "BOROS", "PASAK", "GARUT", "VIRGO", "KARGO", "TULIP", "TULUS", "DONOR", "HOROR", "RUMOR", "TUMOR", "GEGER", "JEJER", "TELER", "BEBEK", "BECEK", "LEHER", "LELEH", "LELET", "RECEH", "PECEK", "PESEK", "NENEK", "JEWER", "BIJAK", "GESEK", "RESEH", "SEREH", "KEKER", "TEHEL", "ELENG", "PEPES", "MEREM", "MEREK", "SEMEN", "MESES", "BACEM", "SERET", "BERES", "BEREL", "CEPER", "BEBER", "MEWEK", "EMBER", "TETES", "PELEH", "GEMEN", "KOTOR", "BESEK", "WESEL", "TEMPE", "CECEH", "KEKEH", "PECEL", "BACEM", "CINTA", "MINTA", "MANTU", "PINTA", "BANDO", "POMPA", "MAYAT", "RAPAT", "LAYAT", "BELAS", "BELAH", "BELAI", "GELAP", "MAKAM", "MACAM", "MACAN", "KONON", "KOLOM", "KOLOR", "HOTEL", "MOTEL", "MODAL", "MODUL", "MODUS", "SUAMI", "KUALI", "KLISE", "ORBIT", "ORDER", "OBROL", "TOPAN", "TENOR", "TELOR", "TELUK", "TEKUK", "TEBUS", "JANDA", "PANDA", "GANDA", "CATUT", "CATUR", "CARUT", "PARUT", "SARUT", "HARPA", "AROMA", "ABSEN", "ABSES", "DOLAR", "MOLAR", "POLAR", "KOLAR", "KOCAK", "SATWA", "FATWA", "GANTI", "NANTI", "PANTI", "SANTI", "SANDI", "SERAP", "LERAI", "PARCA", "MARKA", "KALDU", "KAGUM", "KATOK", "KAPOK", "KALOK", "KATUK", "KATUB", "KAPUK", "KASUS", "KAYUH", "KAPAK", "KAWAH", "BALET", "CADAR", "LAYAK", "LAYAN", "DAWAI", "GAWAI", "GADAI", "GALON", "BALOK", "BALET", "DEBAR", "SEBAR", "CEMAR", "CAMAR", "KANAL", "KEPAL", "KESAL", "CEKAL", "BEBAL", "BEGAL", "BEJAT", "BEBAN", "BARIS", "BOCOR", "BOTOL", "BAHWA", "BASIS", "BASKI", "BASAH", "EMOSI", "GOSOK", "POLOS", "POROS", "BOLOS", "BOLOT", "SODOK", "SOGOK", "MOGOK", "BOBOL", "BAREL", "BAWEL", "KABEL", "LOYAL", "ROYAL", "MOBIL", "POKOK", "POJOK", "POPOK", "KOMIK", "TOPIK", "BALON", "KELAK", "GELAR", "HELAI", "MELAR", "MEKAR", "MEMAR", "CEMAR", "GEMAR", "GERAM", "GERAK", "TEGAR", "TEGAL", "TEBAL", "DELTA", "GALAU", "PAYAU", "BUYER", "JOMOK", "JOROK", "KOKOH", "KOLOT", "COCOL", "COPOT", "CORET", "COLEK", "COMEL", "COPET", "CODET", "KOCOK", "GOPEK", "TOKEK", "KELOK", "SEROK", "PANJI", "PENYU", "TROFI", "TORSO", "ROMPI", "KOMET", "EROSI"," COMOT", "COPOT", "MOLOR", "BAKAR", "BAKAT", "BABAK", "BADAK", "SALAD", "NALAR", "NANAH", "TULAR", "CULAH", "CUKAI", "EMANG", "OMONG", "KASAR", "KEKAR", "KEPAK", "SONIK", "TONIK", "FOTON", "SAYUP", "SAYUR", "ETNIS", "ETNIK", "ENZIM", "JENIS", "SENDI", "SENIN", "JUMAT", "HAMBA", "DAMBA", "KUMIS", "TUMIS", "TULIS", "PUPIL", "KODOK", "KATAK", "KAKAO", "KESAT", "KEBAS", "KEMAS", "SERAI", "SEDIA", "CERAI", "TAPIS", "PISAH", "KARET", "BARET", "SILAM", "MISAL", "CANDU", "SAUNG", "NAUNG", "GAUNG", "SAING", "UDANG", "AGUNG", "APUNG", "ARUNG", "ABANG", "ALANG", "ADANG", "ASING", "ULANG", "OTONG", "GENIT", "GAGAK", "GATAL", "GANAS", "GAWAT", "GAPAI", "MARGA", "HARTA", "PETIR", "PIJAR", "INJAK", "KOLAM", "OPIUM", "BATIN", "KARTU", "GARPU", "ANTRI", "BOTAK", "DOYAN", "DOANG", "DEKOR", "SPION", "SPASI", "SEPAK", "SELAK", "SELOP", "KECIL", "SALEP", "OPTIK", "CACAH", "MARWA", "MESIU", "ASBAK", "ASBES", "DODOL", "DUAFA", "SUAKA", "SUGMA", "SIGMA", "SIRNA", "GESER", "MERDU", "FOKUS", "OPLOS", "ATLAS", "DERIK", "MINIM", "HENTI", "ENDAP", "INGAT", "OBYEK", "OBJEK", "IDEAL", "SEKTE", "DIKTE", "HONOR", "DUKUN", "SISWA", "SISWI", "LAPOR", "MANOR", "MAJOR", "MOHON", "INDRA", "WAHYU", "KAPPA", "SETAN", "SENAR", "MENOR", "TABOK", "KOKOP", "KOMBO", "ULTRA", "TUNIK", "TURIS", "KUTIP", "KUTIL", "KUYUP", "DISKO", "BOGEM", "BUSET", "DONAT", "GIGIL", "TIKUS", "TIRAM", "KIDAL", "KICAU", "KILAU", "SILAU", "RAKSA", "JAKUN", "HAPUS", "HALUS", "HABIS", "HAMIS", "MAGMA", "MASSA", "MAHAL", "MAMAH", "PAPAH", "BAPAK", "BAWAH", "BELEL", "BEBEL", "NILON", "PIAMA", "SALIB", "SALUT", "HANTU", "GAGAP", "KIBAR", "KOBRA", "KOBAR", "POLAH", "BODOH", "BODOK", "BENCI", "SPONS", "SALAK", "SALAM", "SALIM", "SALEM", "SINIS", "HINDU", "HANYA", "TANYA", "MANIA", "MAKIN", "MUKIM", "IMLEK", "PAKAN", "PAKAR", "PARKA", "PUTAR", "PUCUK", "PUKUL", "PUNUK", "PUPUK", "PULUH", "SUSUK", "SUKUN", "DUBUR", "BUBUR", "BUBUK", "BUJUK", "BUJUR", "BUSUK", "SUBUH", "SUMUR", "MUSUH", "BUNUH", "BUNTU", "BULUK", "KUBUR", "BULUH", "PUPUT", "ZUHUR", "JURUS", "JEBOL", "JELEK", "JEWEL", "MEBEL", "TURUS", "SURUT", "SOROT", "SETIR", "TUYUL", "TUKUL", "TUTUL", "TUJUH", "PUTUS", "PUKAT", "PUCAT", "PULEN", "TULEN", "UNDUH", "GUSUR", "KUMUR", "KUTUP", "KUKUH", "KURUS", "KUTUK", "CUCUT", "CECET", "COLOK", "COCOK", "COWOK", "CEWEK", "GEPOK", "KALOR", "KAWAL", "KADAL", "SIAGA", "FIKIR", "PANCI", "PANCO", "SENAT", "SESAL", "SESAR", "SEPAT", "SEDAN", "SEDAK", "SULAM", "SULAP", "SUNAT", "PLANO", "PLENO", "PLANG", "BLONG", "DOSIS", "SOSIS", "TITIP", "TETAK", "GUYUR", "GURIH", "GUNDU", "GUBUK", "JUBAH", "GANDU", "TANDU", "PANDU", "CELUP", "CULES", "GOLEK", "GOLOK", "KIKIS", "SISIK", "SIRIH", "SIPIT", "SERUT", "SERUM", "SEDOT", "CUKUR", "CATOK", "CATUK", "ENCER", "TEGAP", "SEGAN", "KIDAP", "CAKAR", "TEPIS", "JEPIT", "JAJAR", "JAHAT", "JALAR", "GAJAH", "GAGAL", "GARDU", "GARIS", "FUNGI", "MISIL", "TELAK", "TENSI", "TEKOR", "REKOR", "ROBEK", "SOBEK", "SOLEH", "SOKET", "BONEK", "ATLET", "ANTIK", "ANTEK", "ARWAH", "MELER", "TELON", "CURUT", "JERUK", "ALLAH", "ILAHI", "IALAH", "KIRIS", "KERIS", "RONDA", "RAYON", "BUKAN", "BUDAK", "PETIK", "KETIK", "PECIK", "PEKIK", "METIK", "CETOK", "CETUK", "METER", "LAHER", "LAWAK", "LADEN", "LATEN", "LARON", "PAMOR", "RAJAH", "MATOA", "BIDAK", "BIDAH", "BAJAJ", "BAJAK", "BUTUH", "BUBUH", "PUPUS", "BAGAI", "BATIL", "MIROR", "GOYAH", "CEGAH", "BEKAP", "BEKAS", "BEKAM", "BERAK", "BECAK", "SELOK", "TINJA", "TINJU", "BUNDA", "SUPER", "KUMAL", "KELAM", "KERAM", "KERAN", "KETOK", "TOGEL", "SEBUT", "MELON", "LEMON", "TERIK", "SIRIP", "SIRIK", "CEPAT", "GILIR", "BESAN", "PESAT", "PESAK", "PEJAM", "PEGAL", "PERAN", "PINUS", "MINUS", "SILIR", "SUHUR", "SAHUR", "KURMA", "KURVA", "MURKA", "NYEPI", "BATAL", "BAKAL", "BATAM", "BATAK", "BATUK", "BANDA", "CANDI", "BEDAK", "JERAT", "PETOK", "GETOK", "TONDA", "BUANG", "ELANG", "RUANG", "ANGIN", "ACUNG", "EPING", "USANG", "ANDIL", "ANDAI", "CICAK", "CECAK", "JILAT", "LEMOT", "SEPUL", "AJANG", "ANANG", "ARANG", "FRASA", "RAKUS", "TUGAS", "LUGAS", "LOGAM", "KASIR", "DEGUP", "WAJIB", "WAJIK", "NIFAS", "PREMI", "LAMAR", "KUACI", "LUHUR", "LUMUT", "LOTUS", "LOGIS", "LULUH", "DEKAN", "RAYAP", "KUKUS", "HURUF", "RASUL", "TAMAK", "TALAS", "TAWAM", "TAKSI", "TAWON", "RAWON", "PAHAT", "PATAH", "FANTA", "PANTA", "TANTE", "JORAN", "JIRAN", "BURAS", "BABAT", "BANTU", "TUNJA", "SERAH", "BATON", "BETUL", "TUHAN", "TUKAR", "TUPAI", "TAPIR", "TERAP", "PENAT", "BIANG", "PLENG", "BETIS", "BENAK", "TEGUR", "LEPAS", "LIHAI", "MESRA", "TABUR", "JOMPO", "HEWAN", "ENYAH", "AKSEN", "AORTA", "FREON", "TURUT", "KEBUN", "KECUP", "KECUT", "KESUT", "KETUK", "KEJUT", "KEBUT", "KELUH", "NORMA", "PONCO", "PEKAN", "PEKAT", "PEKAK", "BAKAU", "DERAU", "YAITU", "DIDIK"];
 
-    let secretWord = "";
-    let attempts = 8;
-    let currentRow = 0;
-    let currentInput = "";
-    let gameOver = false;
-    let streak = 0;
-    let guesses = [];
-
+    let secretWord, attempts, currentRow, currentInput, gameOver;
+    let streak = 0; 
     const board = document.getElementById('board');
     const statusMsg = document.getElementById('status-msg');
     const btnNewGame = document.getElementById('btn-new-game');
@@ -287,41 +281,16 @@
     const keyboard = document.getElementById('keyboard');
     const streakDisplay = document.getElementById('streak-display');
 
-    function loadGameState() {
+    function loadStreak() {
         const savedStreak = localStorage.getItem('katla_streak');
         if (savedStreak !== null) {
             streak = parseInt(savedStreak, 10);
         }
         updateStreakDisplay();
-
-        const savedSecret = localStorage.getItem('katla_secretWord');
-        const savedAttempts = localStorage.getItem('katla_attempts');
-        const savedCurrentRow = localStorage.getItem('katla_currentRow');
-        const savedGameOver = localStorage.getItem('katla_gameOver');
-        const savedGuesses = localStorage.getItem('katla_guesses');
-
-        if (savedSecret) {
-            secretWord = savedSecret;
-            attempts = savedAttempts !== null ? parseInt(savedAttempts, 10) : 8;
-            currentRow = savedCurrentRow !== null ? parseInt(savedCurrentRow, 10) : 0;
-            gameOver = savedGameOver === 'true';
-            guesses = savedGuesses ? JSON.parse(savedGuesses) : [];
-            currentInput = "";
-
-            buildBoard();
-            restoreBoardState();
-        } else {
-            initGame();
-        }
     }
 
-    function saveGameState() {
+    function saveStreak() {
         localStorage.setItem('katla_streak', streak);
-        localStorage.setItem('katla_secretWord', secretWord);
-        localStorage.setItem('katla_attempts', attempts);
-        localStorage.setItem('katla_currentRow', currentRow);
-        localStorage.setItem('katla_gameOver', gameOver);
-        localStorage.setItem('katla_guesses', JSON.stringify(guesses));
     }
 
     function updateStreakDisplay() {
@@ -332,6 +301,7 @@
         document.getElementById('main-menu').style.display = 'none';
         document.getElementById('game-katla').style.display = 'flex';
         history.pushState({ screen: 'game' }, '');
+        if (!secretWord) { initGame(); }
     }
     
     function goBackToMenu() {
@@ -358,90 +328,26 @@
 
     function initGame() {
         secretWord = dictionary[Math.floor(Math.random() * dictionary.length)];
-        attempts = 8; 
-        currentRow = 0; 
-        currentInput = ""; 
-        gameOver = false;
-        guesses = [];
-        
-        saveGameState();
-        buildBoard();
-    }
-
-    function buildBoard() {
-        document.getElementById('attempts').innerText = "Sisa: " + attempts;
+        attempts = 8; currentRow = 0; currentInput = ""; gameOver = false;
+        document.getElementById('attempts').innerText = "Sisa: 8";
+        statusMsg.innerText = ""; statusMsg.style.color = "white";
         board.innerHTML = "";
-        
-        if (gameOver) {
-            btnNewGame.classList.remove('hidden-btn');
-            btnSurrender.style.visibility = 'hidden';
-            keyboard.style.display = 'none';
-            if (guesses.length > 0 && guesses[guesses.length - 1] === secretWord) {
-                statusMsg.innerText = "MENANG!";
-                statusMsg.style.color = "#4CAF50";
-            } else if (attempts === 0) {
-                statusMsg.innerHTML = `GAME OVER - Kata: <span style="color:white">${secretWord}</span>`;
-                statusMsg.style.color = "#ff4444";
-            } else {
-                statusMsg.innerHTML = `MENYERAH - Kata: <span style="color:white">${secretWord}</span>`;
-                statusMsg.style.color = "#ff4444";
-            }
-        } else {
-            statusMsg.innerText = ""; 
-            statusMsg.style.color = "white";
-            btnNewGame.classList.add('hidden-btn'); 
-            btnSurrender.style.visibility = currentRow > 0 ? 'visible' : 'hidden';
-            keyboard.style.display = 'flex';
-        }
+        btnNewGame.classList.add('hidden-btn'); 
+        btnSurrender.style.visibility = 'hidden';
+        keyboard.style.display = 'flex'; 
         
         updateStreakDisplay();
         
         for (let i = 0; i < 8; i++) {
             const row = document.createElement('div');
-            let rowClass = 'row';
-            if (i > currentRow && !gameOver) {
-                rowClass += ' hidden-row';
-            }
-            row.className = rowClass;
+            row.className = 'row' + (i === 0 ? '' : ' hidden-row');
             row.id = 'row-' + i;
-            
             for (let j = 0; j < 5; j++) {
                 const box = document.createElement('div');
                 box.className = 'box';
                 row.appendChild(box);
             }
             board.appendChild(row);
-        }
-    }
-
-    function restoreBoardState() {
-        for (let r = 0; r < guesses.length; r++) {
-            const guessWord = guesses[r];
-            const rowEl = document.getElementById('row-' + r);
-            const boxes = rowEl.querySelectorAll('.box');
-            let tempSecret = secretWord.split('');
-
-            for (let i = 0; i < 5; i++) {
-                boxes[i].innerText = guessWord[i];
-                if (guessWord[i] === secretWord[i]) {
-                    boxes[i].style.backgroundColor = "#538d4e";
-                    boxes[i].style.borderColor = "#538d4e";
-                    tempSecret[i] = null;
-                }
-            }
-            for (let i = 0; i < 5; i++) {
-                if (boxes[i].style.backgroundColor !== "rgb(83, 141, 78)") {
-                    if (tempSecret.includes(guessWord[i])) {
-                        boxes[i].style.backgroundColor = "#b59f3b";
-                        boxes[i].style.borderColor = "#b59f3b";
-                        boxes[i].style.color = "black";
-                        tempSecret[tempSecret.indexOf(guessWord[i])] = null;
-                    } else {
-                        boxes[i].style.backgroundColor = "#333";
-                        boxes[i].style.borderColor = "#333";
-                    }
-                }
-            }
         }
     }
 
@@ -455,20 +361,16 @@
         statusMsg.innerHTML = `MENYERAH - Kata: <span style="color:white">${secretWord}</span>`;
         statusMsg.style.color = "#ff4444";
         streak = 0; 
-        gameOver = true;
-        saveGameState();
+        saveStreak();
         updateStreakDisplay(); 
+        gameOver = true;
         btnNewGame.classList.remove('hidden-btn');
         btnSurrender.style.visibility = 'hidden';
         keyboard.style.display = 'none';
     }
 
     function resetGame() { 
-        localStorage.removeItem('katla_secretWord');
-        localStorage.removeItem('katla_attempts');
-        localStorage.removeItem('katla_currentRow');
-        localStorage.removeItem('katla_gameOver');
-        localStorage.removeItem('katla_guesses');
+        secretWord = null; 
         initGame(); 
     }
 
@@ -480,15 +382,15 @@
         } else if (key === "DEL") {
             currentInput = currentInput.slice(0, -1);
             statusMsg.innerText = "";
-            updateBoardInput();
+            updateBoard();
         } else if (currentInput.length < 5) {
             currentInput += key;
             statusMsg.innerText = "";
-            updateBoardInput();
+            updateBoard();
         }
     }
 
-    function updateBoardInput() {
+    function updateBoard() {
         const boxes = document.getElementById('row-' + currentRow).querySelectorAll('.box');
         for (let i = 0; i < 5; i++) boxes[i].innerText = currentInput[i] || "";
     }
@@ -502,8 +404,6 @@
             setTimeout(() => rowEl.classList.remove('shake'), 400);
             return;
         }
-
-        guesses.push(currentInput);
         statusMsg.style.color = "white";
         attempts--;
         document.getElementById('attempts').innerText = "Sisa: " + attempts;
@@ -522,10 +422,10 @@
         for(let i=0; i<5; i++) {
             if(boxes[i].style.backgroundColor !== "rgb(83, 141, 78)") {
                 if(tempSecret.includes(currentInput[i])) {
-                    boxes[i].style.backgroundColor = "#b59f3b";
-                    boxes[i].style.borderColor = "#b59f3b";
-                    boxes[i].style.color = "black";
-                    tempSecret[tempSecret.indexOf(currentInput[i])] = null;
+                boxes[i].style.backgroundColor = "#b59f3b";
+                boxes[i].style.borderColor = "#b59f3b";
+                boxes[i].style.color = "black";
+                tempSecret[tempSecret.indexOf(currentInput[i])] = null;
                 } else {
                     boxes[i].style.backgroundColor = "#333";
                     boxes[i].style.borderColor = "#333";
@@ -537,9 +437,9 @@
             statusMsg.innerText = "MENANG!";
             statusMsg.style.color = "#4CAF50";
             streak++; 
-            gameOver = true;
-            saveGameState();
+            saveStreak();
             updateStreakDisplay();
+            gameOver = true;
             btnNewGame.classList.remove('hidden-btn'); 
             btnSurrender.style.visibility = 'hidden';
             keyboard.style.display = 'none';
@@ -547,18 +447,17 @@
             statusMsg.innerHTML = `GAME OVER - Kata: <span style="color:white">${secretWord}</span>`;
             statusMsg.style.color = "#ff4444";
             streak = 0; 
-            gameOver = true;
-            saveGameState();
+            saveStreak();
             updateStreakDisplay();
+            gameOver = true;
             btnNewGame.classList.remove('hidden-btn');
             btnSurrender.style.visibility = 'hidden';
             keyboard.style.display = 'none';
         } else {
             currentRow++;
-            currentInput = "";
-            saveGameState();
             const nextRow = document.getElementById('row-' + currentRow);
             if(nextRow) nextRow.classList.remove('hidden-row');
+            currentInput = "";
             if (currentRow > 0) btnSurrender.style.visibility = 'visible';
         }
     }
