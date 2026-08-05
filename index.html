@@ -110,7 +110,6 @@
 
         #board-area { flex: 0 0 auto; height: 430px; display: flex; justify-content: center; align-items: center; }
         
-        /* PADDING BAWAH DIHILANGKAN AGAR KEYBOARD TURUN MENEMPEL KE DASAR LAYAR */
         #controls-area { flex: 1; display: flex; flex-direction: column; align-items: center; padding-bottom: 0px; width: 100%; box-sizing: border-box; justify-content: flex-end; }
         
         #status-msg { font-size: 14px; height: 25px; text-align: center; margin-bottom: 5px; }
@@ -244,12 +243,42 @@
                 loadingScreen.style.display = 'none';
             }, 800);
         }, 1500);
+
+        // Muat data tersimpan saat pertama kali dibuka
+        loadGameState();
+
+        // Inisialisasi state awal browser history untuk tombol kembali HP
+        history.replaceState({ screen: 'menu' }, '');
+    });
+
+    // Handle tombol kembali (back button) HP
+    window.addEventListener('popstate', (event) => {
+        const settingsOverlay = document.getElementById('settings-overlay');
+        const modalOverlay = document.getElementById('modal-overlay');
+
+        if (modalOverlay.style.display === 'flex') {
+            toggleModal(false);
+            history.pushState({ screen: 'game' }, '');
+        } else if (settingsOverlay.style.display === 'flex') {
+            toggleSettings(false);
+            history.pushState({ screen: 'game' }, '');
+        } else if (document.getElementById('game-katla').style.display === 'flex') {
+            goBackToMenu();
+        } else {
+            history.pushState({ screen: 'menu' }, '');
+        }
     });
 
     const dictionary = ["ABADI", "ACARA", "AKTIF", "AKSES", "AMBIL", "ANTAR", "BADAI", "BADAN", "BAHAN", "BATIK", "BEBAS", "BEKAL", "BENAR", "BENDA", "BENIH", "BERAT", "BESAR", "BESOK"];
 
-    let secretWord, attempts, currentRow, currentInput, gameOver;
-    let streak = 0; 
+    let secretWord = "";
+    let attempts = 8;
+    let currentRow = 0;
+    let currentInput = "";
+    let gameOver = false;
+    let streak = 0;
+    let guesses = [];
+
     const board = document.getElementById('board');
     const statusMsg = document.getElementById('status-msg');
     const btnNewGame = document.getElementById('btn-new-game');
@@ -258,6 +287,43 @@
     const keyboard = document.getElementById('keyboard');
     const streakDisplay = document.getElementById('streak-display');
 
+    function loadGameState() {
+        const savedStreak = localStorage.getItem('katla_streak');
+        if (savedStreak !== null) {
+            streak = parseInt(savedStreak, 10);
+        }
+        updateStreakDisplay();
+
+        const savedSecret = localStorage.getItem('katla_secretWord');
+        const savedAttempts = localStorage.getItem('katla_attempts');
+        const savedCurrentRow = localStorage.getItem('katla_currentRow');
+        const savedGameOver = localStorage.getItem('katla_gameOver');
+        const savedGuesses = localStorage.getItem('katla_guesses');
+
+        if (savedSecret) {
+            secretWord = savedSecret;
+            attempts = savedAttempts !== null ? parseInt(savedAttempts, 10) : 8;
+            currentRow = savedCurrentRow !== null ? parseInt(savedCurrentRow, 10) : 0;
+            gameOver = savedGameOver === 'true';
+            guesses = savedGuesses ? JSON.parse(savedGuesses) : [];
+            currentInput = "";
+
+            buildBoard();
+            restoreBoardState();
+        } else {
+            initGame();
+        }
+    }
+
+    function saveGameState() {
+        localStorage.setItem('katla_streak', streak);
+        localStorage.setItem('katla_secretWord', secretWord);
+        localStorage.setItem('katla_attempts', attempts);
+        localStorage.setItem('katla_currentRow', currentRow);
+        localStorage.setItem('katla_gameOver', gameOver);
+        localStorage.setItem('katla_guesses', JSON.stringify(guesses));
+    }
+
     function updateStreakDisplay() {
         streakDisplay.innerText = "❤‍🔥" + streak;
     }
@@ -265,13 +331,20 @@
     function showGame(game) {
         document.getElementById('main-menu').style.display = 'none';
         document.getElementById('game-katla').style.display = 'flex';
-        if (!secretWord) { initGame(); }
+        history.pushState({ screen: 'game' }, '');
     }
+    
     function goBackToMenu() {
         document.getElementById('game-katla').style.display = 'none';
         document.getElementById('main-menu').style.display = 'flex';
+        history.replaceState({ screen: 'menu' }, '');
     }
-    function toggleSettings(show) { document.getElementById('settings-overlay').style.display = show ? 'flex' : 'none'; }
+
+    function toggleSettings(show) { 
+        document.getElementById('settings-overlay').style.display = show ? 'flex' : 'none'; 
+        if (show) history.pushState({ screen: 'settings' }, '');
+    }
+
     function changeLanguage(lang) {
         document.getElementById('lang-id').classList.remove('active');
         document.getElementById('lang-en').classList.remove('active');
@@ -285,20 +358,53 @@
 
     function initGame() {
         secretWord = dictionary[Math.floor(Math.random() * dictionary.length)];
-        attempts = 8; currentRow = 0; currentInput = ""; gameOver = false;
-        document.getElementById('attempts').innerText = "Sisa: 8";
-        statusMsg.innerText = ""; statusMsg.style.color = "white";
+        attempts = 8; 
+        currentRow = 0; 
+        currentInput = ""; 
+        gameOver = false;
+        guesses = [];
+        
+        saveGameState();
+        buildBoard();
+    }
+
+    function buildBoard() {
+        document.getElementById('attempts').innerText = "Sisa: " + attempts;
         board.innerHTML = "";
-        btnNewGame.classList.add('hidden-btn'); 
-        btnSurrender.style.visibility = 'hidden';
-        keyboard.style.display = 'flex'; 
+        
+        if (gameOver) {
+            btnNewGame.classList.remove('hidden-btn');
+            btnSurrender.style.visibility = 'hidden';
+            keyboard.style.display = 'none';
+            if (guesses.length > 0 && guesses[guesses.length - 1] === secretWord) {
+                statusMsg.innerText = "MENANG!";
+                statusMsg.style.color = "#4CAF50";
+            } else if (attempts === 0) {
+                statusMsg.innerHTML = `GAME OVER - Kata: <span style="color:white">${secretWord}</span>`;
+                statusMsg.style.color = "#ff4444";
+            } else {
+                statusMsg.innerHTML = `MENYERAH - Kata: <span style="color:white">${secretWord}</span>`;
+                statusMsg.style.color = "#ff4444";
+            }
+        } else {
+            statusMsg.innerText = ""; 
+            statusMsg.style.color = "white";
+            btnNewGame.classList.add('hidden-btn'); 
+            btnSurrender.style.visibility = currentRow > 0 ? 'visible' : 'hidden';
+            keyboard.style.display = 'flex';
+        }
         
         updateStreakDisplay();
         
         for (let i = 0; i < 8; i++) {
             const row = document.createElement('div');
-            row.className = 'row' + (i === 0 ? '' : ' hidden-row');
+            let rowClass = 'row';
+            if (i > currentRow && !gameOver) {
+                rowClass += ' hidden-row';
+            }
+            row.className = rowClass;
             row.id = 'row-' + i;
+            
             for (let j = 0; j < 5; j++) {
                 const box = document.createElement('div');
                 box.className = 'box';
@@ -308,22 +414,61 @@
         }
     }
 
-    function toggleModal(show) { modal.style.display = show ? 'flex' : 'none'; }
+    function restoreBoardState() {
+        for (let r = 0; r < guesses.length; r++) {
+            const guessWord = guesses[r];
+            const rowEl = document.getElementById('row-' + r);
+            const boxes = rowEl.querySelectorAll('.box');
+            let tempSecret = secretWord.split('');
+
+            for (let i = 0; i < 5; i++) {
+                boxes[i].innerText = guessWord[i];
+                if (guessWord[i] === secretWord[i]) {
+                    boxes[i].style.backgroundColor = "#538d4e";
+                    boxes[i].style.borderColor = "#538d4e";
+                    tempSecret[i] = null;
+                }
+            }
+            for (let i = 0; i < 5; i++) {
+                if (boxes[i].style.backgroundColor !== "rgb(83, 141, 78)") {
+                    if (tempSecret.includes(guessWord[i])) {
+                        boxes[i].style.backgroundColor = "#b59f3b";
+                        boxes[i].style.borderColor = "#b59f3b";
+                        boxes[i].style.color = "black";
+                        tempSecret[tempSecret.indexOf(guessWord[i])] = null;
+                    } else {
+                        boxes[i].style.backgroundColor = "#333";
+                        boxes[i].style.borderColor = "#333";
+                    }
+                }
+            }
+        }
+    }
+
+    function toggleModal(show) { 
+        modal.style.display = show ? 'flex' : 'none'; 
+        if (show) history.pushState({ screen: 'modal' }, '');
+    }
 
     function confirmSurrender() {
         toggleModal(false);
         statusMsg.innerHTML = `MENYERAH - Kata: <span style="color:white">${secretWord}</span>`;
         statusMsg.style.color = "#ff4444";
         streak = 0; 
-        updateStreakDisplay(); 
         gameOver = true;
+        saveGameState();
+        updateStreakDisplay(); 
         btnNewGame.classList.remove('hidden-btn');
         btnSurrender.style.visibility = 'hidden';
         keyboard.style.display = 'none';
     }
 
     function resetGame() { 
-        secretWord = null; 
+        localStorage.removeItem('katla_secretWord');
+        localStorage.removeItem('katla_attempts');
+        localStorage.removeItem('katla_currentRow');
+        localStorage.removeItem('katla_gameOver');
+        localStorage.removeItem('katla_guesses');
         initGame(); 
     }
 
@@ -335,15 +480,15 @@
         } else if (key === "DEL") {
             currentInput = currentInput.slice(0, -1);
             statusMsg.innerText = "";
-            updateBoard();
+            updateBoardInput();
         } else if (currentInput.length < 5) {
             currentInput += key;
             statusMsg.innerText = "";
-            updateBoard();
+            updateBoardInput();
         }
     }
 
-    function updateBoard() {
+    function updateBoardInput() {
         const boxes = document.getElementById('row-' + currentRow).querySelectorAll('.box');
         for (let i = 0; i < 5; i++) boxes[i].innerText = currentInput[i] || "";
     }
@@ -357,6 +502,8 @@
             setTimeout(() => rowEl.classList.remove('shake'), 400);
             return;
         }
+
+        guesses.push(currentInput);
         statusMsg.style.color = "white";
         attempts--;
         document.getElementById('attempts').innerText = "Sisa: " + attempts;
@@ -375,10 +522,10 @@
         for(let i=0; i<5; i++) {
             if(boxes[i].style.backgroundColor !== "rgb(83, 141, 78)") {
                 if(tempSecret.includes(currentInput[i])) {
-                boxes[i].style.backgroundColor = "#b59f3b";
-                boxes[i].style.borderColor = "#b59f3b";
-                boxes[i].style.color = "black";
-                tempSecret[tempSecret.indexOf(currentInput[i])] = null;
+                    boxes[i].style.backgroundColor = "#b59f3b";
+                    boxes[i].style.borderColor = "#b59f3b";
+                    boxes[i].style.color = "black";
+                    tempSecret[tempSecret.indexOf(currentInput[i])] = null;
                 } else {
                     boxes[i].style.backgroundColor = "#333";
                     boxes[i].style.borderColor = "#333";
@@ -390,8 +537,9 @@
             statusMsg.innerText = "MENANG!";
             statusMsg.style.color = "#4CAF50";
             streak++; 
-            updateStreakDisplay();
             gameOver = true;
+            saveGameState();
+            updateStreakDisplay();
             btnNewGame.classList.remove('hidden-btn'); 
             btnSurrender.style.visibility = 'hidden';
             keyboard.style.display = 'none';
@@ -399,16 +547,18 @@
             statusMsg.innerHTML = `GAME OVER - Kata: <span style="color:white">${secretWord}</span>`;
             statusMsg.style.color = "#ff4444";
             streak = 0; 
-            updateStreakDisplay();
             gameOver = true;
+            saveGameState();
+            updateStreakDisplay();
             btnNewGame.classList.remove('hidden-btn');
             btnSurrender.style.visibility = 'hidden';
             keyboard.style.display = 'none';
         } else {
             currentRow++;
+            currentInput = "";
+            saveGameState();
             const nextRow = document.getElementById('row-' + currentRow);
             if(nextRow) nextRow.classList.remove('hidden-row');
-            currentInput = "";
             if (currentRow > 0) btnSurrender.style.visibility = 'visible';
         }
     }
