@@ -90,14 +90,13 @@
 
         #main-menu { font-size: 70%; display: flex; background-color: #555555; justify-content: flex-start; padding-top: 40px; }
         
-        /* LOGO DI MENU UTAMA DIKEMBALIKAN KE UKURAN NORMAL (70px) */
         .logo-img { width: 70px; height: auto; margin-bottom: 15px; border-radius: 15px; }
 
         .menu-btn { padding: 15px 30px; margin: 10px; font-size: 18px; cursor: pointer; background: #333; color: white; border: none; border-radius: 8px; width: 250px; }
         .menu-btn:hover { background: #444; }
         .menu-buttons { margin-top: 20px; display: flex; flex-direction: column; align-items: center; }
 
-        #header { width: 100%; max-width: 400px; display: grid; grid-template-columns: 80px 1fr 80px; align-items: start; margin-top: 25px; padding: 0 10px; box-sizing: border-box; }
+        #header { width: 100%; max-width: 400px; display: grid; grid-template-columns: 80px 1fr 80px; align-items: start; margin-top: 15px; padding: 0 10px; box-sizing: border-box; }
         #controls-left { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
         #header-center { display: flex; flex-direction: column; align-items: center; justify-content: center; }
         #controls-right { display: flex; flex-direction: column; align-items: flex-end; gap: 18px; }
@@ -109,18 +108,21 @@
 
         #streak-display { font-size: 9px; font-weight: bold; color: white; margin-top: 12px; }
 
-        #board-area { flex: 0 0 auto; height: 480px; display: flex; justify-content: center; align-items: center; }
-        #controls-area { flex: 1; display: flex; flex-direction: column; align-items: center; padding-bottom: 10px; width: 100%; }
-        #status-msg { font-size: 14px; height: 25px; text-align: center; margin-bottom: 15px; }
-        #btn-new-game { background: white; color: black; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 4px; margin-bottom: 10px; }
+        #board-area { flex: 0 0 auto; height: 430px; display: flex; justify-content: center; align-items: center; }
+        
+        /* PADDING BAWAH DIHILANGKAN AGAR KEYBOARD TURUN MENEMPEL KE DASAR LAYAR */
+        #controls-area { flex: 1; display: flex; flex-direction: column; align-items: center; padding-bottom: 0px; width: 100%; box-sizing: border-box; justify-content: flex-end; }
+        
+        #status-msg { font-size: 14px; height: 25px; text-align: center; margin-bottom: 5px; }
+        #btn-new-game { background: white; color: black; border: none; padding: 8px 16px; font-weight: bold; cursor: pointer; border-radius: 4px; margin-bottom: 5px; }
         .hidden-btn { visibility: hidden; }
         
-        .grid { display: grid; grid-template-rows: repeat(8, 44px); gap: 12px; }
-        .row { display: grid; grid-template-columns: repeat(5, 44px); gap: 4px; transition: transform 0.1s; }
+        .grid { display: grid; grid-template-rows: repeat(8, 40px); gap: 8px; }
+        .row { display: grid; grid-template-columns: repeat(5, 40px); gap: 4px; transition: transform 0.1s; }
         .box { 
-            width: 44px; height: 44px; border: 2px solid #333; 
+            width: 40px; height: 40px; border: 2px solid #333; 
             display: flex; align-items: center; justify-content: center; 
-            font-family: 'Arial Black', sans-serif; font-weight: 900; font-size: 22px; 
+            font-family: 'Arial Black', sans-serif; font-weight: 900; font-size: 20px; 
             text-transform: uppercase; border-radius: 4px; box-sizing: border-box;
         }
         .row.hidden-row { visibility: hidden; }
@@ -134,9 +136,9 @@
         }
         .shake { animation: shake 0.4s; }
 
-        .keyboard { display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 400px; }
+        .keyboard { display: flex; flex-direction: column; gap: 5px; width: 100%; max-width: 400px; padding: 0 5px 5px 5px; box-sizing: border-box; }
         .key-row { display: flex; justify-content: center; gap: 4px; }
-        button.key { padding: 10px 5px; background: #333; color: white; border: none; border-radius: 4px; flex: 1; font-weight: bold; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+        button.key { padding: 13px 4px; background: #333; color: white; border: none; border-radius: 4px; flex: 1; font-weight: bold; font-size: 14px; display: flex; align-items: center; justify-content: center; }
         button.wide { flex: 1.5; }
 
         .modal-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); z-index: 100; justify-content: center; align-items: center; }
