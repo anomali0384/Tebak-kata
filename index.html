@@ -3,17 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kata Klasik</title>
+    <title>Tebak Kata - Kata Klasik Online</title>
+
+    <!-- OPTIMASI SEO UNTUK PENCARIAN WEB -->
+    <meta name="description" content="Mainkan game Tebak Kata klasik online gratis. Asah otak dan tebak kata rahasia dalam 8 kesempatan!">
+    <meta name="keywords" content="tebak kata, game tebak kata, katla, wordle indonesia, game web asah otak">
+    <meta name="author" content="Tebak Kata Klasik">
 
     <!-- 1. FAVICON: Untuk logo di tab browser -->
     <link rel="icon" type="image/png" href="https://i.ibb.co.com/4RjtcjvD/1000034154.png">
 
     <!-- 2. META TAGS: Untuk logo saat link dibagikan atau dicari di web -->
     <meta property="og:title" content="Tebak Kata - Kata Klasik">
-    <meta property="og:description" content="Mainkan game tebak kata seru ini!">
+    <meta property="og:description" content="Mainkan game tebak kata seru dan asah otakmu di sini!">
     <meta property="og:image" content="https://i.ibb.co.com/4RjtcjvD/1000034154.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://i.ibb.co.com/4RjtcjvD/1000034154.png">
+
+    <!-- SCHEMA.ORG UNTUK GOOGLE SEARCH -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "VideoGame",
+      "name": "Tebak Kata - Kata Klasik",
+      "description": "Game tebak kata seru dan menantang secara online.",
+      "genre": "Puzzle",
+      "playMode": "SinglePlayer",
+      "applicationCategory": "BrowserGame",
+      "operatingSystem": "All"
+    }
+    </script>
 
     <style>
         body { background-color: #121212; color: white; font-family: sans-serif; margin: 0; height: 100dvh; overflow: hidden; }
@@ -33,7 +52,7 @@
             background-color: #121212; 
             z-index: 999; 
             opacity: 1;
-            transition: opacity 0.8s ease, visibility 0.8s ease; /* Transisi halus 0.8 detik */
+            transition: opacity 0.8s ease, visibility 0.8s ease;
         }
         
         #loading-screen.fade-out {
@@ -194,17 +213,14 @@
 </div>
 
 <script>
-    // Logika animasi memudar (fade-out) dari loading screen ke menu utama
     window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             const loadingScreen = document.getElementById('loading-screen');
-            loadingScreen.classList.add('fade-out'); // Memulai animasi redup/memudar
-            
-            // Setelah animasi memudar selesai (0.8s), sembunyikan sepenuhnya elemen loading
+            loadingScreen.classList.add('fade-out');
             setTimeout(() => {
                 loadingScreen.style.display = 'none';
             }, 800);
-        }, 1500); // Tampil 1.5 detik sebelum memudar
+        }, 1500);
     });
 
     const dictionary = ["ABADI", "ACARA", "AKTIF", "AKSES", "AMBIL", "ANTAR", "BADAI", "BADAN", "BAHAN", "BATIK", "BEBAS", "BEKAL", "BENAR", "BENDA", "BENIH", "BERAT", "BESAR", "BESOK"];
@@ -336,10 +352,10 @@
         for(let i=0; i<5; i++) {
             if(boxes[i].style.backgroundColor !== "rgb(83, 141, 78)") {
                 if(tempSecret.includes(currentInput[i])) {
-                    boxes[i].style.backgroundColor = "#b59f3b";
-                    boxes[i].style.borderColor = "#b59f3b";
-                    boxes[i].style.color = "black";
-                    tempSecret[tempSecret.indexOf(currentInput[i])] = null;
+                boxes[i].style.backgroundColor = "#b59f3b";
+                boxes[i].style.borderColor = "#b59f3b";
+                boxes[i].style.color = "black";
+                tempSecret[tempSecret.indexOf(currentInput[i])] = null;
                 } else {
                     boxes[i].style.backgroundColor = "#333";
                     boxes[i].style.borderColor = "#333";
@@ -361,7 +377,7 @@
             statusMsg.style.color = "#ff4444";
             streak = 0; 
             updateStreakDisplay();
-            gameOver = true;
+            gameOver = True;
             btnNewGame.classList.remove('hidden-btn');
             btnSurrender.style.visibility = 'hidden';
             keyboard.style.display = 'none';
@@ -385,6 +401,7 @@
             if (k === "DEL") {
                 btn.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z"/></svg>';
             } else {
+                btn.innerText = ``;
                 btn.innerText = k;
             }
             
