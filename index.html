@@ -5,19 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tebak Kata - Kata Klasik Online</title>
 
-    <!-- GOOGLE SEARCH CONSOLE VERIFICATION -->
     <meta name="google-site-verification" content="OiTQumkpEC0oL9tsuRtAewPL4eiJQP_P7yxXg0x8N3s" />
-
-    <!-- OPTIMASI SEO UNTUK PENCARIAN WEB -->
     <meta name="description" content="Mainkan game Tebak Kata klasik online gratis. Asah otak dan tebak kata rahasia dalam 8 kesempatan!">
     <meta name="keywords" content="tebak kata, game tebak kata, katla, wordle indonesia, game web asah otak">
     <meta name="author" content="Tebak Kata Klasik">
 
-    <!-- 1. FAVICON & PWA ICON CONFIGURATION -->
     <link rel="icon" type="image/png" href="https://i.ibb.co.com/4RjtcjvD/1000034154.png">
     <link rel="apple-touch-icon" href="https://i.ibb.co.com/4RjtcjvD/1000034154.png">
 
-    <!-- WEB APP MANIFEST INLINE -->
     <link rel="manifest" href="data:application/manifest+json;charset=utf-8,{
         %22name%22: %22Tebak Kata%22,
         %22short_name%22: %22Tebak Kata%22,
@@ -35,14 +30,12 @@
         ]
     }">
 
-    <!-- 2. META TAGS -->
     <meta property="og:title" content="Tebak Kata - Kata Klasik">
     <meta property="og:description" content="Mainkan game tebak kata seru dan asah otakmu di sini!">
     <meta property="og:image" content="https://i.ibb.co.com/4RjtcjvD/1000034154.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://i.ibb.co.com/4RjtcjvD/1000034154.png">
 
-    <!-- SCHEMA.ORG -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -57,29 +50,18 @@
     </script>
 
     <style>
-        body { background-color: #121212; color: white; font-family: sans-serif; margin: 0; height: 100dvh; overflow: hidden; }
+        body { background-color: #121212; color: white; font-family: sans-serif; margin: 0; height: 100dvh; overflow: hidden; -webkit-tap-highlight-color: transparent; }
 
         .screen { width: 100%; height: 100dvh; display: none; flex-direction: column; align-items: center; box-sizing: border-box; }
         
         #loading-screen { 
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100dvh;
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            background-color: #121212; 
-            z-index: 999; 
-            opacity: 1;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100dvh;
+            display: flex; justify-content: center; align-items: center; 
+            background-color: #121212; z-index: 999; opacity: 1;
             transition: opacity 0.8s ease, visibility 0.8s ease;
         }
         
-        #loading-screen.fade-out {
-            opacity: 0;
-            visibility: hidden;
-        }
+        #loading-screen.fade-out { opacity: 0; visibility: hidden; }
 
         .loading-logo { width: 220px; height: auto; animation: pulse 1.5s infinite alternate; }
         
@@ -89,10 +71,9 @@
         }
 
         #main-menu { font-size: 70%; display: flex; background-color: #555555; justify-content: flex-start; padding-top: 40px; }
-        
         .logo-img { width: 70px; height: auto; margin-bottom: 15px; border-radius: 15px; }
 
-        .menu-btn { padding: 15px 30px; margin: 10px; font-size: 18px; cursor: pointer; background: #333; color: white; border: none; border-radius: 8px; width: 250px; }
+        .menu-btn { padding: 15px 30px; margin: 10px; font-size: 18px; cursor: pointer; background: #333; color: white; border: none; border-radius: 8px; width: 250px; -webkit-tap-highlight-color: transparent; }
         .menu-btn:hover { background: #444; }
         .menu-buttons { margin-top: 20px; display: flex; flex-direction: column; align-items: center; }
 
@@ -101,28 +82,33 @@
         #header-center { display: flex; flex-direction: column; align-items: center; justify-content: center; }
         #controls-right { display: flex; flex-direction: column; align-items: flex-end; gap: 18px; }
         
-        #btn-menu, #btn-settings { background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; }
-        #btn-surrender { background-color: #ff4444; color: white; border: none; padding: 6px 12px; font-size: 12px; font-weight: bold; border-radius: 4px; cursor: pointer; visibility: hidden; }
+        #btn-menu, #btn-settings { background: none; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; -webkit-tap-highlight-color: transparent; }
+        #btn-surrender { background-color: #ff4444; color: white; border: none; padding: 6px 12px; font-size: 12px; font-weight: bold; border-radius: 4px; cursor: pointer; visibility: hidden; -webkit-tap-highlight-color: transparent; }
         #attempts { font-size: 14px; text-align: right; }
         #header h3 { text-align: center; margin: 0; font-size: 75%; font-weight: 500; letter-spacing: 1px; }
 
         #streak-display { font-size: 9px; font-weight: bold; color: white; margin-top: 12px; }
 
-        #board-area { flex: 0 0 auto; height: 430px; display: flex; justify-content: center; align-items: center; }
+        #board-area { flex: 0 0 auto; height: 430px; display: flex; justify-content: center; align-items: center; overflow-x: auto; max-width: 100%; padding: 0 10px; box-sizing: border-box; }
         
-        #controls-area { flex: 1; display: flex; flex-direction: column; align-items: center; padding-bottom: 0px; width: 100%; box-sizing: border-box; justify-content: flex-end; }
+        #controls-area { flex: 1; display: flex; flex-direction: column; align-items: center; padding-bottom: 0px; width: 100%; box-sizing: border-box; justify-content: flex-end; position: relative; }
         
-        #status-msg { font-size: 14px; height: 25px; text-align: center; margin-bottom: 5px; }
-        #btn-new-game { background: white; color: black; border: none; padding: 8px 16px; font-weight: bold; cursor: pointer; border-radius: 4px; margin-bottom: 5px; }
-        .hidden-btn { visibility: hidden; }
+        #status-msg { font-size: 14px; height: 25px; text-align: center; position: absolute; bottom: 175px; width: 100%; z-index: 10; }
         
-        .grid { display: grid; grid-template-rows: repeat(8, 40px); gap: 8px; }
-        .row { display: grid; grid-template-columns: repeat(5, 40px); gap: 4px; transition: transform 0.1s; }
+        #btn-new-game { background: white; color: black; border: none; padding: 8px 16px; font-size: 14px; font-weight: bold; cursor: pointer; border-radius: 4px; margin-bottom: 120px; z-index: 10; -webkit-tap-highlight-color: transparent; }
+        .hidden-btn { display: none !important; }
+        
+        .grid { display: grid; grid-template-rows: repeat(8, 36px); gap: 6px; }
+        .row { display: grid; gap: 4px; transition: transform 0.1s; }
         .box { 
-            width: 40px; height: 40px; border: 2px solid #333; 
+            width: 36px; height: 36px; border: 2px solid #333; 
             display: flex; align-items: center; justify-content: center; 
-            font-family: 'Arial Black', sans-serif; font-weight: 900; font-size: 20px; 
+            font-family: 'Arial Black', sans-serif; font-weight: 900; font-size: 18px; 
             text-transform: uppercase; border-radius: 4px; box-sizing: border-box;
+            cursor: pointer;
+        }
+        .box.active-box {
+            border-color: #9ca3af;
         }
         .row.hidden-row { visibility: hidden; }
         
@@ -135,32 +121,47 @@
         }
         .shake { animation: shake 0.4s; }
 
-        .keyboard { display: flex; flex-direction: column; gap: 5px; width: 100%; max-width: 400px; padding: 0 5px 5px 5px; box-sizing: border-box; }
-        .key-row { display: flex; justify-content: center; gap: 4px; }
-        button.key { padding: 13px 4px; background: #333; color: white; border: none; border-radius: 4px; flex: 1; font-weight: bold; font-size: 14px; display: flex; align-items: center; justify-content: center; }
-        button.wide { flex: 1.5; }
+        .keyboard { 
+            display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 410px; 
+            padding: 5px 8px 12px 8px; box-sizing: border-box; position: absolute; bottom: 0; 
+            background-color: transparent; z-index: 5; 
+        }
+        .key-row { display: flex; justify-content: center; gap: 5px; }
+        
+        button.key { 
+            padding: 14px 4px; background: #6b7280; color: #ffffff; 
+            border: none; border-radius: 6px; flex: 1; font-weight: 800; font-size: 13px; 
+            display: flex; align-items: center; justify-content: center; 
+            box-shadow: 0 4px 0 #4b5563, 0 4px 6px rgba(0,0,0,0.25); 
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            outline: none;
+        }
+        button.key:focus {
+            outline: none;
+        }
+        button.wide { flex: 1.6; background: #9ca3af; font-size: 11px; color: #1f2937; box-shadow: 0 4px 0 #6b7280, 0 4px 6px rgba(0,0,0,0.25); }
 
         .modal-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); z-index: 100; justify-content: center; align-items: center; }
         .modal-box { background: #1e1e1e; border: 1px solid #333; padding: 20px; border-radius: 12px; text-align: center; width: 80%; max-width: 300px; }
         .modal-buttons { display: flex; justify-content: space-between; margin-top: 20px; gap: 10px; }
-        .btn-modal { background: rgba(255,255,255,0.75); color: black; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; font-size: 14px; cursor: pointer; flex: 1; }
+        .btn-modal { background: rgba(255,255,255,0.75); color: black; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; font-size: 14px; cursor: pointer; flex: 1; -webkit-tap-highlight-color: transparent; }
         .settings-title { font-size: 14px; color: #aaa; margin: 15px 0 8px 0; font-weight: bold; text-align: left; }
-        .settings-btn { display: block; width: 100%; padding: 10px; margin-bottom: 8px; background: #2a2a2a; border: 1px solid #444; color: white; border-radius: 6px; cursor: pointer; font-size: 14px; text-align: center; }
+        .settings-btn { display: block; width: 100%; padding: 10px; margin-bottom: 8px; background: #2a2a2a; border: 1px solid #444; color: white; border-radius: 6px; cursor: pointer; font-size: 14px; text-align: center; -webkit-tap-highlight-color: transparent; }
         .settings-btn.active { background: #444; border-color: #666; font-weight: bold; }
         .num-row { display: flex; justify-content: space-between; gap: 6px; margin-bottom: 15px; }
-        .num-btn { flex: 1; padding: 8px 0; background: #2a2a2a; border: 1px solid #444; color: white; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; }
+        .num-btn { flex: 1; padding: 8px 0; background: #2a2a2a; border: 1px solid #444; color: white; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; -webkit-tap-highlight-color: transparent; }
         .num-btn.active { background: #444; border-color: #666; }
-        .btn-close-settings { margin-top: 10px; background: white; color: black; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
+        .btn-close-settings { margin-top: 10px; background: white; color: black; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; -webkit-tap-highlight-color: transparent; }
     </style>
 </head>
 <body>
 
-<!-- LAYAR LOADING -->
 <div id="loading-screen">
     <img src="https://i.ibb.co.com/4RjtcjvD/1000034154.png" alt="Loading Logo" class="loading-logo">
 </div>
 
-<!-- MENU UTAMA -->
 <div id="main-menu" class="screen">
     <img src="https://i.ibb.co.com/4RjtcjvD/1000034154.png" alt="Logo Tebak Kata" class="logo-img">
     
@@ -244,14 +245,10 @@
             }, 800);
         }, 1500);
 
-        // Muat streak tersimpan saat halaman pertama kali dibuka
         loadStreak();
-
-        // Inisialisasi state awal browser history untuk tombol kembali HP
         history.replaceState({ screen: 'menu' }, '');
     });
 
-    // Handle tombol kembali (back button) HP
     window.addEventListener('popstate', (event) => {
         const settingsOverlay = document.getElementById('settings-overlay');
         const modalOverlay = document.getElementById('modal-overlay');
@@ -265,14 +262,23 @@
         } else if (document.getElementById('game-katla').style.display === 'flex') {
             goBackToMenu();
         } else {
-            history.pushState({ screen: 'menu' }, '');
+            history.replaceState({ screen: 'menu' }, '');
         }
     });
 
-    const dictionary = ["ABADI", "ACARA", "AKTIF", "AKSES", "AMBIL", "ANTAR", "BADAI", "BADAN", "BAHAN", "BATIK", "BEBAS", "BEKAL", "BENAR", "BENDA", "BENIH", "BERAT", "BESAR", "BESOK", "BETON", "BIASA", "BIBIR", "BIDAN", "BIKIN", "BILIK", "BIOLA", "BISIK", "BOBOT", "BOLEH", "BOSAN", "BUAYA", "BUKIT", "BUKTI", "BULAN", "BUNGA", "BUNYI", "BURUH", "BURUK", "BUSUR", "BUTIR", "CABAI", "CABUT", "CACAT", "CAKAP", "CALON", "CAMAT", "CAPAI", "CATAT", "CAWAN", "CEKIK", "CELAH", "CEMAS", "CERAH", "CERIA", "CETAK", "CIPTA", "CITRA", "CUACA", "CUKUP", "CURAH", "DALAM", "DAMAI", "DAMAR", "DANAU", "DAPAT", "DARAH", "DARAT", "DEBAT", "DEBIT", "DEKAT", "DEKAP", "DEMAM", "DENDA", "DERAS", "DERET", "DETAK", "DETIK", "DEWAN", "DIKSI", "DINAS", "DUDUK", "DUNIA", "DUSUN", "EGOIS", "ELEGI", "GIGIT", "GURUH", "HAFAL", "HARGA", "HARUM", "HASIL", "HEMAT", "HIBUR", "HIDUP", "HIJAU", "HITAM", "HUKUM", "HUTAN", "IKLAN", "INDAH", "INPUT", "INTAN", "IRAMA", "ISENG", "ISLAH", "JAGAT", "JALAN", "JAMBU", "JAMIN", "JANJI", "JARAK", "JARUM", "JATUH", "JAWAB", "JELAS", "JELMA", "JERIH", "JINAK", "JOGET", "JUDUL", "JUJUR", "JULUK", "JUMPA", "KABAR", "KABUT", "KADAR", "KAKAK", "KALAU", "KALBU", "KAMAR", "KAMUS", "KAPAN", "KANTA", "KAPAL", "KARAM", "KASUR", "KAWAN", "KAYAK", "KEDAI", "KELAS", "KELIR", "KENAL", "KERAS", "KERJA", "KESAN", "KETAT", "KIMIA", "KIRIM", "KISAH", "KITAB", "KORAN", "KOTAK", "KRIDA", "KRIYA", "KUASA", "KULIT", "KUMAN", "KUNCI", "KURAS", "KURSI", "LAHIR", "LAMPU", "LAPAR", "LARAS", "LATAR", "LAWAN", "LAYAR", "LEBAT", "LELAH", "LEMAK", "LETAK", "LEVEL", "LIHAT", "LIRIK", "LOKAL", "LOMBA", "LUKIS", "LUNAK", "LURUS", "MABUK", "MADYA", "MAKAN", "MAMPU", "MANDI", "MANIS", "MARAH", "MASAK", "MASUK", "MAWAR", "MENIT", "MERAH", "MESTI", "MESIN", "MINAT", "MINUM", "MIRIP", "MODAL", "MODEL", "MOMEN", "MORAL", "MOTIF", "MOTOR", "MUDIK", "MULAI", "MULIA", "MULUT", "MURAH", "MURID", "MUSIM", "NAFAS", "NAKAS", "NAMUN", "NASIB", "NATAL", "NEKAT", "NETRA", "NILAI", "NOMOR", "NYALA", "NYATA", "OMPOL", "OPINI", "ORANG", "PACAR", "PADAM", "PADAT", "PAGAR", "PAHAM", "PAJAK", "PAKAI", "PAKET", "PALSU", "PANAS", "PANEL", "PAPAN", "PARAF", "PARIT", "PARUH", "PASAR", "PASIF", "PASIR", "PATEN", "PATUH", "PECAH", "PEDAL", "PEDAS", "PEGAS", "PELAN", "PENUH", "PENUH", "PERAH", "PERAS", "PERLU", "PESAN", "PETAK", "PIALA", "PIANO", "PIKAT", "PIKIR", "PILAH", "PILOT", "PINTU", "PISAU", "POHON", "POLIO", "POLIS", "PORSI", "PRIMA", "PROMO", "PROSA", "PUISI", "PULAU", "PULSA", "PUNCA", "PURBA", "PUSAT", "PUTIH", "PUTRA", "QURAN", "RABUN", "RACIK", "RADAR", "RADIO", "RAKIT", "RAMAI", "RAMBU", "RANAH", "RANCU", "RAPAT", "RASIO", "RATAP", "REBAH", "REBUS", "REMAH", "RENDA", "REUNI", "RICUH", "RINDU", "RISAU", "RITME", "RIVAL", "ROKET", "RUKUN", "RUMAH", "RUMUS", "RUSAK", "SABAR", "SABUN", "SADAR", "SAKIT", "SALAH", "SALJU", "SALON", "SALUR", "SAMAR", "SANTA", "SARAN", "SARAT", "SASAR", "SAWAH", "SEBAB", "SEGAR", "SEKAT", "SELAM", "SELAT", "SEMUA", "SENAM", "SENDA", "SENJA", "SERAK", "SERAM", "SERAT", "SERBU", "SERTA", "SESAK", "SETIA", "SETOR", "SIANG", "SIAPA", "SIFAT", "SIKAP", "SIKAT", "SIKSA", "SILAT", "SIMAK", "SINAR", "SINGA", "SIPIL", "SIRAM", "SISIR", "SITUS", "SKALA", "SKEMA", "SOBAT", "SOLAR", "SOLID", "SONAR", "SOPAN", "SORAK", "SOSOK", "SPASI", "START", "STUDI", "STRES", "SUARA", "SUDAH", "SUJUD", "SULIT", "SULUH", "SUMBU", "SURAT", "SURYA", "SUSUN", "SUTRA", "TABAH", "TABEL", "TABIK", "TABIR", "TAHAN", "TAHAP", "TAHUN", "TAJAM", "TAKAR", "TAKUT", "TALAK", "TAMAN", "TANAH", "TANAK", "TANAM", "TANDA", "TANPA", "TAPAK", "TARIF", "TARIK", "TATAP", "TAWAR", "TEBAK", "TEBAS", "TEGAK", "TEGAS", "TEGUK", "TEKAD", "TEKAN", "TEKUN", "TELAN", "TELAT", "TELUR", "TEMAN", "TEMPA", "TENAR", "TENDA", "TENIS", "TENUN", "TEPAT", "TEPUK", "TERAS", "TERUS", "TEWAS", "TIANG", "TIDAK", "TIDUR", "TIKAM", "TIKET", "TIMAH", "TIMBA", "TIMUR", "TINTA", "TIRAI", "TITIK", "TOKOH", "TOLAK", "TOLEH", "TOMAT", "TORSI", "TOTAL", "TREND", "TULIS", "TUNAI", "TUNAS", "TUNDA", "TURUN", "TUTUP", "UDARA", "UJIAN", "ULAMA", "UNDUR", "UNSUR", "UNTUK", "UPAYA", "USAHA", "UTAMA", "UTANG", "UTARA", "VALID", "VARIA", "VENUS", "VIDEO", "VILLA", "VIRUS", "VISUM", "VITAL", "VOKAL", "VONIS", "WADAH", "WAJAH", "WAJAR", "WAKAF", "WAKIL", "WAKTU", "WALET", "WARAS", "WARGA", "WARNA", "WARTA", "WASIT", "WATAK", "WIDYA", "WINDU", "WISMA", "WUDHU", "MALAM", "MALAS", "LAPAR", "ECENG", "FOBIA", "KIMIA", "ONCOM", "BALAS", "BELUT", "BELOK", "BELOT", "GADIS", "KAPAN", "PAPAN", "DAMAR", "KOBOI", "OMBAK", "TOBAT", "LOBAK", "DOMBA", "JANUR", "JALUR", "SARAF", "CAWAT", "SAJAK", "BALAI", "KAWAT", "WALAU", "DEPAN", "LEGAL", "TETAP", "KALAH", "KIPAS", "JAJAH", "LEBAM", "INTRO", "SEDAP", "DEDAK", "DERAI", "SADIS", "SAKSI", "SIBUK", "SIPUT", "SINUS", "SIRUP", "SIKUT", "SENTI", "SENSI", "FINIS", "ISTRI", "ISING", "ISLAM", "SEHAT", "SEJAK", "SESAT", "SYAIR", "SALTO", "SALDO", "PALEM", "KALEM", "BIHUN", "IBLIS", "IKLIM", "KLIEN", "ALIEN", "AGAMA", "ALARM", "ANEKA", "ARENA", "ALBUM", "ALIAS", "ALTER", "GLOBE", "HIMNE", "THETA", "INTIM", "INTER", "MITOS", "PEYOT", "BETOT", "YATIM", "ELING", "PLUTO", "ARTIS", "ARSIP", "ARGON", "TIRTA", "MITRA", "PUTRI", "ROMAN", "EYANG", "ENTAH", "EMISI", "EDISI", "SUNYI", "SEPUH", "SEKOP", "ULUNG", "URUNG", "ELANG", "OLENG", "OPONG", "OYONG", "OBENG", "KORAL", "BOCAH", "BACOK", "BACOT", "CIDUK", "CICIL", "LIRIS", "KIKIL", "LICIK", "BINTI", "BIBIT", "DIDIH", "DIGIT", "HILIR", "NIHIL", "SIDIK", "SISIP", "CICIP", "LILIN", "INANG", "JIJIK", "PIPIS", "TIPIS", "KIKIR", "GIGIH", "INGIN", "AMINO", "PIPIT", "LIMIT", "MIMIK", "MANIS", "ZIKIR", "LIPIT", "MUSIK", "IBRIT", "KOPLO", "MIMPI", "FISIK", "FIKSI", "INJIL", "WINDI", "WIDIH", "BIJIH", "INTIP", "FIKIR", "JILID", "VIVID", "TIRIS", "RISIH", "RISIK", "CIBIR", "SIHIR", "SIPIR", "CICIT", "PIPIH", "PILIH", "JOULE", "GIMIK", "PELIK", "DELIK", "BELIT", "MILIK", "SILIH", "LEMAH", "LULUS", "LOLOS", "LEMBU", "LECET", "LUCUT", "PARAS", "SAYAP", "LALAT", "RANAI", "NANAS", "NANAR", "RAWAT", "PAPAR", "DADAR", "CACAR", "RALAT", "RAMAH", "RAWAN", "MAHAR", "SABTU", "BABAK", "GAGAH", "PANCA", "SANCA", "KAMIS", "PANIR", "BAKSO", "PAKIS", "SAKTI", "PANIK", "PAKSA", "JAKSA", "DAKSA", "JAKET", "PUASA", "NYERI", "NGERI", "CANDA", "CAGAR", "CERNA", "NYAWA", "KARIM", "LAZIM", "KOREK", "KEROK", "TEROR", "KEONG", "NYALI", "NGILU", "BABON", "BALIK", "YAKIN", "YAKNI", "INTEL", "KAFIR", "KARIR", "KARIP", "LABIL", "LABEL", "FABEL", "MAYOR", "BUYAR", "BAYAR", "BAZAR", "KEBAB", "IMPOR", "MIKRO", "MAKRO", "MAKRO", "SELIR", "SEMIR", "SEMUR", "BOROS", "PASAK", "GARUT", "VIRGO", "KARGO", "TULIP", "TULUS", "DONOR", "HOROR", "RUMOR", "TUMOR", "GEGER", "JEJER", "TELER", "BEBEK", "BECEK", "LEHER", "LELEH", "LELET", "RECEH", "PECEK", "PESEK", "NENEK", "JEWER", "BIJAK", "GESEK", "RESEH", "SEREH", "KEKER", "TEHEL", "ELENG", "PEPES", "MEREM", "MEREK", "SEMEN", "MESES", "BACEM", "SERET", "BERES", "BEREL", "CEPER", "BEBER", "MEWEK", "EMBER", "TETES", "PELEH", "GEMEN", "KOTOR", "BESEK", "WESEL", "TEMPE", "CECEH", "KEKEH", "PECEL", "BACEM", "CINTA", "MINTA", "MANTU", "PINTA", "BANDO", "POMPA", "MAYAT", "RAPAT", "LAYAT", "BELAS", "BELAH", "BELAI", "GELAP", "MAKAM", "MACAM", "MACAN", "KONON", "KOLOM", "KOLOR", "HOTEL", "MOTEL", "MODAL", "MODUL", "MODUS", "SUAMI", "KUALI", "KLISE", "ORBIT", "ORDER", "OBROL", "TOPAN", "TENOR", "TELOR", "TELUK", "TEKUK", "TEBUS", "JANDA", "PANDA", "GANDA", "CATUT", "CATUR", "CARUT", "PARUT", "SARUT", "HARPA", "AROMA", "ABSEN", "ABSES", "DOLAR", "MOLAR", "POLAR", "KOLAR", "KOCAK", "SATWA", "FATWA", "GANTI", "NANTI", "PANTI", "SANTI", "SANDI", "SERAP", "LERAI", "PARCA", "MARKA", "KALDU", "KAGUM", "KATOK", "KAPOK", "KALOK", "KATUK", "KATUB", "KAPUK", "KASUS", "KAYUH", "KAPAK", "KAWAH", "BALET", "CADAR", "LAYAK", "LAYAN", "DAWAI", "GAWAI", "GADAI", "GALON", "BALOK", "BALET", "DEBAR", "SEBAR", "CEMAR", "CAMAR", "KANAL", "KEPAL", "KESAL", "CEKAL", "BEBAL", "BEGAL", "BEJAT", "BEBAN", "BARIS", "BOCOR", "BOTOL", "BAHWA", "BASIS", "BASKI", "BASAH", "EMOSI", "GOSOK", "POLOS", "POROS", "BOLOS", "BOLOT", "SODOK", "SOGOK", "MOGOK", "BOBOL", "BAREL", "BAWEL", "KABEL", "LOYAL", "ROYAL", "MOBIL", "POKOK", "POJOK", "POPOK", "KOMIK", "TOPIK", "BALON", "KELAK", "GELAR", "HELAI", "MELAR", "MEKAR", "MEMAR", "CEMAR", "GEMAR", "GERAM", "GERAK", "TEGAR", "TEGAL", "TEBAL", "DELTA", "GALAU", "PAYAU", "BUYER", "JOMOK", "JOROK", "KOKOH", "KOLOT", "COCOL", "COPOT", "CORET", "COLEK", "COMEL", "COPET", "CODET", "KOCOK", "GOPEK", "TOKEK", "KELOK", "SEROK", "PANJI", "PENYU", "TROFI", "TORSO", "ROMPI", "KOMET", "EROSI"," COMOT", "COPOT", "MOLOR", "BAKAR", "BAKAT", "BABAK", "BADAK", "SALAD", "NALAR", "NANAH", "TULAR", "CULAH", "CUKAI", "EMANG", "OMONG", "KASAR", "KEKAR", "KEPAK", "SONIK", "TONIK", "FOTON", "SAYUP", "SAYUR", "ETNIS", "ETNIK", "ENZIM", "JENIS", "SENDI", "SENIN", "JUMAT", "HAMBA", "DAMBA", "KUMIS", "TUMIS", "TULIS", "PUPIL", "KODOK", "KATAK", "KAKAO", "KESAT", "KEBAS", "KEMAS", "SERAI", "SEDIA", "CERAI", "TAPIS", "PISAH", "KARET", "BARET", "SILAM", "MISAL", "CANDU", "SAUNG", "NAUNG", "GAUNG", "SAING", "UDANG", "AGUNG", "APUNG", "ARUNG", "ABANG", "ALANG", "ADANG", "ASING", "ULANG", "OTONG", "GENIT", "GAGAK", "GATAL", "GANAS", "GAWAT", "GAPAI", "MARGA", "HARTA", "PETIR", "PIJAR", "INJAK", "KOLAM", "OPIUM", "BATIN", "KARTU", "GARPU", "ANTRI", "BOTAK", "DOYAN", "DOANG", "DEKOR", "SPION", "SPASI", "SEPAK", "SELAK", "SELOP", "KECIL", "SALEP", "OPTIK", "CACAH", "MARWA", "MESIU", "ASBAK", "ASBES", "DODOL", "DUAFA", "SUAKA", "SUGMA", "SIGMA", "SIRNA", "GESER", "MERDU", "FOKUS", "OPLOS", "ATLAS", "DERIK", "MINIM", "HENTI", "ENDAP", "INGAT", "OBYEK", "OBJEK", "IDEAL", "SEKTE", "DIKTE", "HONOR", "DUKUN", "SISWA", "SISWI", "LAPOR", "MANOR", "MAJOR", "MOHON", "INDRA", "WAHYU", "KAPPA", "SETAN", "SENAR", "MENOR", "TABOK", "KOKOP", "KOMBO", "ULTRA", "TUNIK", "TURIS", "KUTIP", "KUTIL", "KUYUP", "DISKO", "BOGEM", "BUSET", "DONAT", "GIGIL", "TIKUS", "TIRAM", "KIDAL", "KICAU", "KILAU", "SILAU", "RAKSA", "JAKUN", "HAPUS", "HALUS", "HABIS", "HAMIS", "MAGMA", "MASSA", "MAHAL", "MAMAH", "PAPAH", "BAPAK", "BAWAH", "BELEL", "BEBEL", "NILON", "PIAMA", "SALIB", "SALUT", "HANTU", "GAGAP", "KIBAR", "KOBRA", "KOBAR", "POLAH", "BODOH", "BODOK", "BENCI", "SPONS", "SALAK", "SALAM", "SALIM", "SALEM", "SINIS", "HINDU", "HANYA", "TANYA", "MANIA", "MAKIN", "MUKIM", "IMLEK", "PAKAN", "PAKAR", "PARKA", "PUTAR", "PUCUK", "PUKUL", "PUNUK", "PUPUK", "PULUH", "SUSUK", "SUKUN", "DUBUR", "BUBUR", "BUBUK", "BUJUK", "BUJUR", "BUSUK", "SUBUH", "SUMUR", "MUSUH", "BUNUH", "BUNTU", "BULUK", "KUBUR", "BULUH", "PUPUT", "ZUHUR", "JURUS", "JEBOL", "JELEK", "JEWEL", "MEBEL", "TURUS", "SURUT", "SOROT", "SETIR", "TUYUL", "TUKUL", "TUTUL", "TUJUH", "PUTUS", "PUKAT", "PUCAT", "PULEN", "TULEN", "UNDUH", "GUSUR", "KUMUR", "KUTUP", "KUKUH", "KURUS", "KUTUK", "CUCUT", "CECET", "COLOK", "COCOK", "COWOK", "CEWEK", "GEPOK", "KALOR", "KAWAL", "KADAL", "SIAGA", "FIKIR", "PANCI", "PANCO", "SENAT", "SESAL", "SESAR", "SEPAT", "SEDAN", "SEDAK", "SULAM", "SULAP", "SUNAT", "PLANO", "PLENO", "PLANG", "BLONG", "DOSIS", "SOSIS", "TITIP", "TETAK", "GUYUR", "GURIH", "GUNDU", "GUBUK", "JUBAH", "GANDU", "TANDU", "PANDU", "CELUP", "CULES", "GOLEK", "GOLOK", "KIKIS", "SISIK", "SIRIH", "SIPIT", "SERUT", "SERUM", "SEDOT", "CUKUR", "CATOK", "CATUK", "ENCER", "TEGAP", "SEGAN", "KIDAP", "CAKAR", "TEPIS", "JEPIT", "JAJAR", "JAHAT", "JALAR", "GAJAH", "GAGAL", "GARDU", "GARIS", "FUNGI", "MISIL", "TELAK", "TENSI", "TEKOR", "REKOR", "ROBEK", "SOBEK", "SOLEH", "SOKET", "BONEK", "ATLET", "ANTIK", "ANTEK", "ARWAH", "MELER", "TELON", "CURUT", "JERUK", "ALLAH", "ILAHI", "IALAH", "KIRIS", "KERIS", "RONDA", "RAYON", "BUKAN", "BUDAK", "PETIK", "KETIK", "PECIK", "PEKIK", "METIK", "CETOK", "CETUK", "METER", "LAHER", "LAWAK", "LADEN", "LATEN", "LARON", "PAMOR", "RAJAH", "MATOA", "BIDAK", "BIDAH", "BAJAJ", "BAJAK", "BUTUH", "BUBUH", "PUPUS", "BAGAI", "BATIL", "MIROR", "GOYAH", "CEGAH", "BEKAP", "BEKAS", "BEKAM", "BERAK", "BECAK", "SELOK", "TINJA", "TINJU", "BUNDA", "SUPER", "KUMAL", "KELAM", "KERAM", "KERAN", "KETOK", "TOGEL", "SEBUT", "MELON", "LEMON", "TERIK", "SIRIP", "SIRIK", "CEPAT", "GILIR", "BESAN", "PESAT", "PESAK", "PEJAM", "PEGAL", "PERAN", "PINUS", "MINUS", "SILIR", "SUHUR", "SAHUR", "KURMA", "KURVA", "MURKA", "NYEPI", "BATAL", "BAKAL", "BATAM", "BATAK", "BATUK", "BANDA", "CANDI", "BEDAK", "JERAT", "PETOK", "GETOK", "TONDA", "BUANG", "ELANG", "RUANG", "ANGIN", "ACUNG", "EPING", "USANG", "ANDIL", "ANDAI", "CICAK", "CECAK", "JILAT", "LEMOT", "SEPUL", "AJANG", "ANANG", "ARANG", "FRASA", "RAKUS", "TUGAS", "LUGAS", "LOGAM", "KASIR", "DEGUP", "WAJIB", "WAJIK", "NIFAS", "PREMI", "LAMAR", "KUACI", "LUHUR", "LUMUT", "LOTUS", "LOGIS", "LULUH", "DEKAN", "RAYAP", "KUKUS", "HURUF", "RASUL", "TAMAK", "TALAS", "TAWAM", "TAKSI", "TAWON", "RAWON", "PAHAT", "PATAH", "FANTA", "PANTA", "TANTE", "JORAN", "JIRAN", "BURAS", "BABAT", "BANTU", "TUNJA", "SERAH", "BATON", "BETUL", "TUHAN", "TUKAR", "TUPAI", "TAPIR", "TERAP", "PENAT", "BIANG", "PLENG", "BETIS", "BENAK", "TEGUR", "LEPAS", "LIHAI", "MESRA", "TABUR", "JOMPO", "HEWAN", "ENYAH", "AKSEN", "AORTA", "FREON", "TURUT", "KEBUN", "KECUP", "KECUT", "KESUT", "KETUK", "KEJUT", "KEBUT", "KELUH", "NORMA", "PONCO", "PEKAN", "PEKAT", "PEKAK", "BAKAU", "DERAU", "YAITU", "DIDIK"];
+    const dictionaryMap = {
+        5: ["ABADI", "ACARA", "AKTIF", "AKSES", "AMBIL", "ANTAR", "BADAI", "BADAN", "BAHAN", "BATIK", "BEBAS", "BEKAL", "BENAR", "BENDA", "BENIH", "BERAT", "BESAR", "BESOK", "BETON", "BIASA", "BIBIR", "BIDAN"],
+        6: ["ALAMAT", "BANDAR", "CANTIK", "CERITA", "DEMPET", "GOMBAL", "GAMBAR", "KELADI", "KORBAN", "MENTAL", "BONEKA", "SENANG"],
+        7: ["BAHAGIA", "BANTUAN", "EKONOMI", "GAMELAN", "KELUARGA", "KOLONEL", "MASALAH", "SEKOLAH"],
+        8: ["KELENJAR", "KOMPUTER", "OLAHRAGA", "DEKORASI", "RENOVASI"],
+        9: ["ASTRONOMI", "DEMOKRASI", "KABUPATEN", "BIMASAKTI", "TEKNOLOGI"]
+    };
 
-    let secretWord, attempts, currentRow, currentInput, gameOver;
+    let wordLength = 5;
+    let gameState = {}; // Menyimpan state per panjang kata agar tidak tereset saat ganti jumlah huruf
     let streak = 0; 
+    let keyStates = {};
+    
     const board = document.getElementById('board');
     const statusMsg = document.getElementById('status-msg');
     const btnNewGame = document.getElementById('btn-new-game');
@@ -282,15 +288,13 @@
     const streakDisplay = document.getElementById('streak-display');
 
     function loadStreak() {
-        const savedStreak = localStorage.getItem('katla_streak');
-        if (savedStreak !== null) {
-            streak = parseInt(savedStreak, 10);
-        }
+        const savedStreak = localStorage.getItem('katla_streak_' + wordLength);
+        streak = savedStreak !== null ? parseInt(savedStreak, 10) : 0;
         updateStreakDisplay();
     }
 
     function saveStreak() {
-        localStorage.setItem('katla_streak', streak);
+        localStorage.setItem('katla_streak_' + wordLength, streak);
     }
 
     function updateStreakDisplay() {
@@ -301,7 +305,8 @@
         document.getElementById('main-menu').style.display = 'none';
         document.getElementById('game-katla').style.display = 'flex';
         history.pushState({ screen: 'game' }, '');
-        if (!secretWord) { initGame(); }
+        if (!gameState[wordLength]) { initGameData(); }
+        else { restoreGameData(); }
     }
     
     function goBackToMenu() {
@@ -320,35 +325,88 @@
         document.getElementById('lang-en').classList.remove('active');
         document.getElementById('lang-' + lang).classList.add('active');
     }
+
     function changeLength(element, length) {
         const buttons = document.querySelectorAll('.num-btn');
         buttons.forEach(btn => btn.classList.remove('active'));
         element.classList.add('active');
+        wordLength = length;
+        loadStreak();
+        
+        if (!gameState[wordLength]) {
+            initGameData();
+        } else {
+            restoreGameData();
+        }
     }
 
-    function initGame() {
-        secretWord = dictionary[Math.floor(Math.random() * dictionary.length)];
-        attempts = 8; currentRow = 0; currentInput = ""; gameOver = false;
-        document.getElementById('attempts').innerText = "Sisa: 8";
+    function initGameData() {
+        const currentDict = dictionaryMap[wordLength] || dictionaryMap[5];
+        gameState[wordLength] = {
+            secretWord: currentDict[Math.floor(Math.random() * currentDict.length)],
+            attempts: 8,
+            currentRow: 0,
+            currentInput: "",
+            activeBoxIndex: 0,
+            gameOver: false,
+            guesses: [], // Menyimpan riwayat tebakan per baris
+            keyStates: {}
+        };
+        restoreGameData();
+    }
+
+    function restoreGameData() {
+        const state = gameState[wordLength];
+        document.getElementById('attempts').innerText = "Sisa: " + state.attempts;
         statusMsg.innerText = ""; statusMsg.style.color = "white";
         board.innerHTML = "";
-        btnNewGame.classList.add('hidden-btn'); 
-        btnSurrender.style.visibility = 'hidden';
-        keyboard.style.display = 'flex'; 
         
+        if (state.gameOver) {
+            btnNewGame.classList.remove('hidden-btn');
+            btnSurrender.style.visibility = 'hidden';
+            keyboard.style.display = 'none';
+        } else {
+            btnNewGame.classList.add('hidden-btn');
+            btnSurrender.style.visibility = state.currentRow > 0 ? 'visible' : 'hidden';
+            keyboard.style.display = 'flex';
+        }
+        
+        keyStates = state.keyStates;
         updateStreakDisplay();
+        renderKeyboard();
         
         for (let i = 0; i < 8; i++) {
             const row = document.createElement('div');
-            row.className = 'row' + (i === 0 ? '' : ' hidden-row');
+            row.className = 'row' + (i <= state.currentRow && (!state.gameOver || i < state.attempts || state.guesses[i]) ? '' : (i === state.currentRow ? '' : ' hidden-row'));
+            // Jika baris sudah lewat atau belum terbuka tapi sesuai logika
+            if (i > state.currentRow && i !== state.currentRow) {
+                row.className = 'row hidden-row';
+            }
             row.id = 'row-' + i;
-            for (let j = 0; j < 5; j++) {
+            row.style.gridTemplateColumns = `repeat(${wordLength}, 36px)`;
+            
+            for (let j = 0; j < wordLength; j++) {
                 const box = document.createElement('div');
                 box.className = 'box';
+                const boxIndex = j;
+                box.onclick = () => {
+                    if (state.gameOver || i !== state.currentRow) return;
+                    state.activeBoxIndex = boxIndex;
+                    updateBoard();
+                };
                 row.appendChild(box);
             }
             board.appendChild(row);
         }
+
+        // Render ulang tebakan yang sudah masuk sebelumnya
+        for (let i = 0; i < state.guesses.length; i++) {
+            if (state.guesses[i]) {
+                applyGuessVisuals(i, state.guesses[i]);
+            }
+        }
+        updateBoard();
+        updateKeyboardColors();
     }
 
     function toggleModal(show) { 
@@ -358,129 +416,216 @@
 
     function confirmSurrender() {
         toggleModal(false);
-        statusMsg.innerHTML = `MENYERAH - Kata: <span style="color:white">${secretWord}</span>`;
+        const state = gameState[wordLength];
+        statusMsg.innerHTML = `MENYERAH - Kata: <span style="color:white">${state.secretWord}</span>`;
         statusMsg.style.color = "#ff4444";
         streak = 0; 
         saveStreak();
         updateStreakDisplay(); 
-        gameOver = true;
+        state.gameOver = true;
         btnNewGame.classList.remove('hidden-btn');
         btnSurrender.style.visibility = 'hidden';
         keyboard.style.display = 'none';
     }
 
     function resetGame() { 
-        secretWord = null; 
-        initGame(); 
+        gameState[wordLength] = null;
+        initGameData(); 
     }
 
     function handleInput(key) {
-        if (gameOver) return;
+        const state = gameState[wordLength];
+        if (state.gameOver) return;
+        
+        let inputArray = state.currentInput.padEnd(wordLength, ' ').split('');
+
         if (key === "ENTER") {
-            if (currentInput.length === 5) checkWord();
-            else statusMsg.innerText = "Harus 5 huruf!";
+            if (state.currentInput.trim().length === wordLength && state.currentInput.length === wordLength) {
+                checkWord();
+            } else {
+                statusMsg.innerText = `Harus ${wordLength} huruf!`;
+            }
         } else if (key === "DEL") {
-            currentInput = currentInput.slice(0, -1);
+            if (inputArray[state.activeBoxIndex] !== ' ') {
+                inputArray[state.activeBoxIndex] = ' ';
+            } else if (state.activeBoxIndex > 0) {
+                state.activeBoxIndex--;
+                inputArray[state.activeBoxIndex] = ' ';
+            }
+            state.currentInput = inputArray.join('').trimEnd();
             statusMsg.innerText = "";
             updateBoard();
-        } else if (currentInput.length < 5) {
-            currentInput += key;
+        } else {
+            inputArray[state.activeBoxIndex] = key;
+            state.currentInput = inputArray.join('').replace(/\s+$/, '');
+            if (state.activeBoxIndex < wordLength - 1) {
+                state.activeBoxIndex++;
+            }
             statusMsg.innerText = "";
             updateBoard();
         }
     }
 
     function updateBoard() {
-        const boxes = document.getElementById('row-' + currentRow).querySelectorAll('.box');
-        for (let i = 0; i < 5; i++) boxes[i].innerText = currentInput[i] || "";
+        const state = gameState[wordLength];
+        const rowEl = document.getElementById('row-' + state.currentRow);
+        if (!rowEl) return;
+        const boxes = rowEl.querySelectorAll('.box');
+        
+        for (let i = 0; i < wordLength; i++) {
+            boxes[i].innerText = state.currentInput[i] || "";
+            if (i === state.activeBoxIndex && !state.gameOver) {
+                boxes[i].classList.add('active-box');
+            } else {
+                boxes[i].classList.remove('active-box');
+            }
+        }
+    }
+
+    function applyGuessVisuals(rowIndex, guessWord) {
+        const state = gameState[wordLength];
+        const rowEl = document.getElementById('row-' + rowIndex);
+        if (!rowEl) return;
+        const boxes = rowEl.querySelectorAll('.box');
+        let tempSecret = state.secretWord.split('');
+        let guessResult = Array(wordLength).fill('gray');
+        
+        for(let i=0; i<wordLength; i++) {
+            boxes[i].innerText = guessWord[i];
+            if(guessWord[i] === state.secretWord[i]) {
+                boxes[i].style.backgroundColor = "#538d4e";
+                boxes[i].style.borderColor = "#538d4e";
+                tempSecret[i] = null;
+                guessResult[i] = 'green';
+            }
+        }
+        for(let i=0; i<wordLength; i++) {
+            if(guessResult[i] !== 'green') {
+                if(tempSecret.includes(guessWord[i])) {
+                    boxes[i].style.backgroundColor = "#b59f3b";
+                    boxes[i].style.borderColor = "#b59f3b";
+                    boxes[i].style.color = "black";
+                    tempSecret[tempSecret.indexOf(guessWord[i])] = null;
+                    guessResult[i] = 'yellow';
+                } else {
+                    boxes[i].style.backgroundColor = "#333";
+                    boxes[i].style.borderColor = "#333";
+                    guessResult[i] = 'gray';
+                }
+            }
+        }
+    }
+
+    function updateKeyboardColors() {
+        const keyButtons = keyboard.querySelectorAll('button.key');
+        keyButtons.forEach(btn => {
+            const letter = btn.innerText;
+            if (keyStates[letter] === 'green') {
+                btn.style.backgroundColor = '#538d4e';
+                btn.style.color = 'white';
+                btn.style.boxShadow = '0 4px 0 #3b6337, 0 4px 6px rgba(0,0,0,0.25)';
+            } else if (keyStates[letter] === 'yellow') {
+                btn.style.backgroundColor = '#b59f3b';
+                btn.style.color = 'white';
+                btn.style.boxShadow = '0 4px 0 #8c792d, 0 4px 6px rgba(0,0,0,0.25)';
+            } else if (keyStates[letter] === 'gray') {
+                btn.style.backgroundColor = '#374151';
+                btn.style.color = '#9ca3af';
+                btn.style.boxShadow = '0 4px 0 #1f2937, 0 4px 6px rgba(0,0,0,0.25)';
+            }
+        });
     }
 
     function checkWord() {
-        if (!dictionary.includes(currentInput)) {
+        const state = gameState[wordLength];
+        const currentDict = dictionaryMap[wordLength] || dictionaryMap[5];
+        if (!currentDict.includes(state.currentInput)) {
             statusMsg.innerText = "Tidak ada di kamus!";
             statusMsg.style.color = "orange";
-            const rowEl = document.getElementById('row-' + currentRow);
+            const rowEl = document.getElementById('row-' + state.currentRow);
             rowEl.classList.add('shake');
             setTimeout(() => rowEl.classList.remove('shake'), 400);
             return;
         }
         statusMsg.style.color = "white";
-        attempts--;
-        document.getElementById('attempts').innerText = "Sisa: " + attempts;
+        state.attempts--;
+        document.getElementById('attempts').innerText = "Sisa: " + state.attempts;
         
-        const rowEl = document.getElementById('row-' + currentRow);
-        const boxes = rowEl.querySelectorAll('.box');
-        let tempSecret = secretWord.split('');
-        
-        for(let i=0; i<5; i++) {
-            if(currentInput[i] === secretWord[i]) {
-                boxes[i].style.backgroundColor = "#538d4e";
-                boxes[i].style.borderColor = "#538d4e";
-                tempSecret[i] = null;
-            }
-        }
-        for(let i=0; i<5; i++) {
-            if(boxes[i].style.backgroundColor !== "rgb(83, 141, 78)") {
-                if(tempSecret.includes(currentInput[i])) {
-                boxes[i].style.backgroundColor = "#b59f3b";
-                boxes[i].style.borderColor = "#b59f3b";
-                boxes[i].style.color = "black";
-                tempSecret[tempSecret.indexOf(currentInput[i])] = null;
-                } else {
-                    boxes[i].style.backgroundColor = "#333";
-                    boxes[i].style.borderColor = "#333";
-                }
-            }
-        }
+        state.guesses[state.currentRow] = state.currentInput;
+        applyGuessVisuals(state.currentRow, state.currentInput);
 
-        if (currentInput === secretWord) {
+        for(let i=0; i<wordLength; i++) {
+            let letter = state.currentInput[i];
+            // Hitung status huruf untuk keyStates global wordLength ini
+            let isGreen = state.currentInput[i] === state.secretWord[i];
+            let isYellow = !isGreen && state.secretWord.includes(letter);
+            
+            if (isGreen) {
+                keyStates[letter] = 'green';
+            } else if (isYellow && keyStates[letter] !== 'green') {
+                keyStates[letter] = 'yellow';
+            } else if (!keyStates[letter]) {
+                keyStates[letter] = 'gray';
+            }
+        }
+        state.keyStates = keyStates;
+        updateKeyboardColors();
+
+        if (state.currentInput === state.secretWord) {
             statusMsg.innerText = "MENANG!";
             statusMsg.style.color = "#4CAF50";
             streak++; 
             saveStreak();
             updateStreakDisplay();
-            gameOver = true;
+            state.gameOver = true;
             btnNewGame.classList.remove('hidden-btn'); 
             btnSurrender.style.visibility = 'hidden';
             keyboard.style.display = 'none';
-        } else if (attempts === 0) {
-            statusMsg.innerHTML = `GAME OVER - Kata: <span style="color:white">${secretWord}</span>`;
+        } else if (state.attempts === 0) {
+            statusMsg.innerHTML = `GAME OVER - Kata: <span style="color:white">${state.secretWord}</span>`;
             statusMsg.style.color = "#ff4444";
             streak = 0; 
             saveStreak();
             updateStreakDisplay();
-            gameOver = true;
+            state.gameOver = true;
             btnNewGame.classList.remove('hidden-btn');
             btnSurrender.style.visibility = 'hidden';
             keyboard.style.display = 'none';
         } else {
-            currentRow++;
-            const nextRow = document.getElementById('row-' + currentRow);
+            state.currentRow++;
+            state.activeBoxIndex = 0;
+            const nextRow = document.getElementById('row-' + state.currentRow);
             if(nextRow) nextRow.classList.remove('hidden-row');
-            currentInput = "";
-            if (currentRow > 0) btnSurrender.style.visibility = 'visible';
+            state.currentInput = "";
+            updateBoard();
+            if (state.currentRow > 0) btnSurrender.style.visibility = 'visible';
         }
     }
 
-    const keys = [["Q","W","E","R","T","Y","U","I","O","P"], ["A","S","D","F","G","H","J","K","L"], ["DEL","Z","X","C","V","B","N","M","ENTER"]];
-    keys.forEach(rowArr => {
-        const rowDiv = document.createElement('div');
-        rowDiv.className = 'key-row';
-        rowArr.forEach(k => {
-            const btn = document.createElement('button');
-            btn.className = "key" + (k === "ENTER" || k === "DEL" ? " wide" : "");
-            
-            if (k === "DEL") {
-                btn.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z"/></svg>';
-            } else {
-                btn.innerText = k;
-            }
-            
-            btn.onclick = () => handleInput(k);
-            rowDiv.appendChild(btn);
+    function renderKeyboard() {
+        keyboard.innerHTML = "";
+        const keys = [["Q","W","E","R","T","Y","U","I","O","P"], ["A","S","D","F","G","H","J","K","L"], ["DEL","Z","X","C","V","B","N","M","ENTER"]];
+        keys.forEach(rowArr => {
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'key-row';
+            rowArr.forEach(k => {
+                const btn = document.createElement('button');
+                btn.className = "key" + (k === "ENTER" || k === "DEL" ? " wide" : "");
+                
+                if (k === "DEL") {
+                    btn.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="#ffffff"><path d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z"/></svg>';
+                } else {
+                    btn.innerText = k;
+                }
+                
+                btn.onclick = () => handleInput(k);
+                rowDiv.appendChild(btn);
+            });
+            keyboard.appendChild(rowDiv);
         });
-        document.getElementById('keyboard').appendChild(rowDiv);
-    });
+    }
+
+    renderKeyboard();
 </script>
 </body>
 </html>
